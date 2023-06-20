@@ -12,11 +12,16 @@
     "@types/node": "20.3.1",
     "@types/react": "18.2.13",
     "@types/react-dom": "18.2.6",
+    "axios": "^1.4.0",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
     "next": "13.4.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sass": "^1.63.4",
+    "scss": "^0.2.4",
+    "socket.io": "^4.6.2",
+    "socket.io-client": "^4.6.2",
     "typescript": "5.1.3"
   }
 }
