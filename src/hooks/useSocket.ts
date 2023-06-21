@@ -1,20 +1,30 @@
 import { useEffect, useRef } from "react";
 import io, { Socket } from "socket.io-client";
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
 
-const useSocket = (url: string): Socket | null => {
+type SocketInitializer = () => Promise<
+  Socket<DefaultEventsMap, DefaultEventsMap>
+>;
+
+const useSocket = (): [Socket | null, SocketInitializer] => {
   const socketRef = useRef<Socket | null>(null);
 
-  useEffect(() => {
-    socketRef.current = io(`/api/socket`);
+  const socketInitializer: SocketInitializer = async () => {
+    await fetch("/api/socket");
+    socketRef.current = io();
 
+    return socketRef.current;
+  };
+
+  useEffect(() => {
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
       }
     };
-  }, [url]);
+  }, []);
 
-  return socketRef.current;
+  return [socketRef.current, socketInitializer];
 };
 
 export default useSocket;

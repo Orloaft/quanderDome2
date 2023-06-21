@@ -1,26 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // SignIn component
-const SignIn = ({ verifyName }: { verifyName: (username: string) => void }) => {
+const SignInView = ({
+  socket,
+  handleSubmit,
+}: {
+  socket: any;
+  handleSubmit: any;
+}) => {
   const [username, setUsername] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
+    message && setMessage("");
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    verifyName(username);
-  };
+  useEffect(() => {
+    socket.on("username_msg", (msg: string) => {
+      setMessage(msg);
+    });
+  }, [socket]);
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <form onSubmit={handleSubmit}>
+    <div>
+      <form
+        style={{ display: "flex", flexDirection: "column" }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(username);
+        }}
+      >
         <input
           type="text"
           value={username}
@@ -28,9 +36,10 @@ const SignIn = ({ verifyName }: { verifyName: (username: string) => void }) => {
           placeholder="user name"
         />
         <button>Sign in</button>
+        {message}
       </form>
     </div>
   );
 };
 
-export default SignIn;
+export default SignInView;

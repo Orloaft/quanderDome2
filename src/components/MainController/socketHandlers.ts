@@ -4,8 +4,7 @@ const handleSocketEvents = (
   socket: Socket,
   setData: React.Dispatch<React.SetStateAction<any>>
 ): void => {
-  socket.on("event1", (data: any) => {
-    // Handle event1 logic
+  socket.on("add_user_res", (data: any) => {
     setData(data);
   });
 

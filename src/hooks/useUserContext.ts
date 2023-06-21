@@ -1,9 +1,10 @@
+import { User } from "@/gameLogic/playersController";
 import { createContext, useContext } from "react";
 
 // UserContext definition
 interface UserContextType {
-  username: string;
-  setUsername: (username: string) => void;
+  user: User | undefined;
+  setUser: (user: User) => void;
 }
 const UserContext = createContext<UserContextType | undefined>(undefined);
 // Custom hook to use UserContext
