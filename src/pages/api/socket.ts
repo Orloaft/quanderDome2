@@ -1,4 +1,4 @@
-import { addUser } from "@/gameLogic/playersController";
+import { addUser, removeUser } from "@/gameLogic/playersController";
 import { verifyUsername } from "@/utils/verify";
 import { Server } from "Socket.IO";
 
@@ -11,6 +11,10 @@ const SocketHandler = (req: any, res: any) => {
     res.socket.server.io = io;
     io.on("connect", (socket) => {
       console.log(socket.id);
+      socket.on("disconnect", () => {
+        console.log(`Socket ${socket.id} disconnected`);
+        removeUser(socket.id);
+      });
       socket.on("add_user", (username: string) => {
         let verifyMsg = verifyUsername(username);
         io.to(socket.id).emit("username_msg", verifyMsg);

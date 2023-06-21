@@ -23,15 +23,17 @@ const addUser = (socketId: string, name: string): User => {
   const id = generateUniqueId();
   const user: User = { id, name, socketId: socketId };
   users.push(user);
+  console.log(users);
   return user;
 };
 
 // Remove a user from the users array
 const removeUser = (id: string): void => {
-  const index = users.findIndex((user) => user.id === id);
+  const index = users.findIndex((user) => user.socketId === id);
   if (index !== -1) {
     users.splice(index, 1);
   }
+  console.log(users);
 };
 
 export { users, addUser, removeUser };
