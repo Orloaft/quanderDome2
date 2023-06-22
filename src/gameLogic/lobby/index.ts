@@ -1,3 +1,4 @@
+import { ChatMessage } from "@/components/Chat/Chat";
 import { GameData } from "..";
 import { User } from "../users";
 import { v4 as uuidv4 } from "uuid";
@@ -15,6 +16,7 @@ export interface Lobby {
   users: User[];
   config: GameConfig;
   game: GameData | null;
+  chat: ChatMessage[];
 }
 interface GameConfig {
   mode: GameMode;
@@ -71,6 +73,17 @@ const joinLobby = (user: User, id: string) => {
   }
   return lobbies[index];
 };
+const sendLobbyMessage = (
+  lobbyId: string,
+  username: string,
+  message: string
+) => {
+  const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
+  if (index !== -1) {
+    lobbies[index].chat.push({ userName: username, message: message });
+  }
+  return lobbies[index];
+};
 const createLobby = (host: User, name: string) => {
   const config: GameConfig = { mode: 0, questions: 15, category: 0, time: 60 };
   const lobby: Lobby = {
@@ -80,6 +93,7 @@ const createLobby = (host: User, name: string) => {
     users: [host],
     config: config,
     game: null,
+    chat: [],
   };
   !lobbies.find((lobby) => lobby.hostId === host.id) && lobbies.push(lobby);
   return lobby;
@@ -91,4 +105,5 @@ export {
   closeLobby,
   lobbies,
   getUpdatedLobby,
+  sendLobbyMessage,
 };

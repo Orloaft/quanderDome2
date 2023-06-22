@@ -9,6 +9,8 @@ import { LobbyList } from "../LobbyList/LobbyList";
 import { Player } from "@/gameLogic";
 import { Lobby } from "@/gameLogic/lobby";
 import { LobbyView } from "../Lobby/Lobby";
+import ChatBox from "../Chat/Chat";
+import ChatInput from "../Chat/ChatInput";
 
 export const MainController = () => {
   const [socket, socketInitializer] = useSocket();
@@ -20,6 +22,9 @@ export const MainController = () => {
   const { user, isConnected, lobby } = data;
   const signIn = (name: string) => {
     socket?.emit("add_user", name);
+  };
+  const sendMessage = (message: string) => {
+    socket?.emit("send_message", lobby?.id, user?.name, message);
   };
   const signOut = () => {
     user && socket?.emit("remove_user", user.id);
@@ -57,6 +62,8 @@ export const MainController = () => {
         (lobby && (
           <>
             <LobbyView lobby={lobby} />
+            <ChatBox messages={lobby.chat} />
+            <ChatInput onSendMessage={sendMessage} />
             <button
               onClick={() => {
                 user && socket?.emit("leave_lobby", user.id);

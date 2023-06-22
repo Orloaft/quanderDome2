@@ -5,6 +5,7 @@ import {
   joinLobby,
   lobbies,
   removeUserFromLobby,
+  sendLobbyMessage,
 } from "@/gameLogic/lobby";
 import {
   User,
@@ -33,11 +34,17 @@ const SocketHandler = (req: any, res: any) => {
           io.to(lobby.id).emit("update_lobby_res", lobby);
         }
       });
+      socket.on("send_message", (lobbyId, username, message) => {
+        let lobby = sendLobbyMessage(lobbyId, username, message);
+
+        if (lobby) {
+          io.to(lobby.id).emit("update_lobby_res", lobby);
+        }
+      });
       socket.on("remove_user", (id: string) => {
         removeUser(id);
       });
       socket.on("reconnect_user", (id: string) => {
-        console.log("reconnecting");
         const user = updateSocket(id, socket.id);
         user && io.to(socket.id).emit("add_user_res", user);
       });
