@@ -28,7 +28,7 @@ export const MainController = () => {
     socket?.emit("send_message", lobby?.id, user?.name, message);
   };
   const updateConfig = (config: GameConfig) => {
-    lobby && socket?.emit("update_config", config, lobby.id);
+    lobby && socket?.emit("update_config", lobby.id, config);
   };
   const signOut = () => {
     user && socket?.emit("remove_user", user.id);

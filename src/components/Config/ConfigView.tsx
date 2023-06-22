@@ -1,4 +1,6 @@
-import { GameConfig } from "@/gameLogic/lobby";
+import { GameConfig, GameMode } from "@/gameLogic/lobby";
+import { CategorySelect } from "./CategorySelect";
+import { options } from "@/utils/categories";
 
 export const ConfigView = ({
   config,
@@ -9,23 +11,33 @@ export const ConfigView = ({
   onChange: any;
   isHost: boolean;
 }) => {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedCategory = options.find(
+    (option) => option.id === +config.category
+  );
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
     const newConfig = { ...config, [name]: value };
-
     onChange(newConfig);
   };
   if (isHost) {
     return (
-      <div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <label>
           Mode:
-          <input
-            type="text"
+          <select
             name="mode"
-            value={config.mode}
+            defaultValue={config.mode}
             onChange={handleInputChange}
-          />
+          >
+            {Object.values(GameMode).map((value) => (
+              <option key={value} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label>
@@ -33,18 +45,16 @@ export const ConfigView = ({
           <input
             type="number"
             name="questions"
-            value={config.questions}
+            defaultValue={config.questions}
             onChange={handleInputChange}
           />
         </label>
 
         <label>
           Category:
-          <input
-            type="number"
-            name="category"
-            value={config.category}
-            onChange={handleInputChange}
+          <CategorySelect
+            handleInputChange={handleInputChange}
+            category={config.category}
           />
         </label>
 
@@ -53,7 +63,7 @@ export const ConfigView = ({
           <input
             type="number"
             name="time"
-            value={config.time}
+            defaultValue={config.time}
             onChange={handleInputChange}
           />
         </label>
@@ -61,7 +71,7 @@ export const ConfigView = ({
     );
   } else {
     return (
-      <div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <label>
           Mode:
           <span>{config.mode}</span>
@@ -74,7 +84,7 @@ export const ConfigView = ({
 
         <label>
           Category:
-          <span>{config.category}</span>
+          <span>{selectedCategory && selectedCategory.name}</span>
         </label>
 
         <label>

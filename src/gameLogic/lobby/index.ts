@@ -2,11 +2,11 @@ import { ChatMessage } from "@/components/Chat/Chat";
 import { GameData } from "..";
 import { User } from "../users";
 import { v4 as uuidv4 } from "uuid";
-enum GameMode {
-  NORMAL,
-  SUDDEN_DEATH,
-  MARATHON,
-  TEAMS,
+export enum GameMode {
+  NORMAL = "NORMAL",
+  SUDDEN_DEATH = "SUDDEN_DEATH",
+  MARATHON = "MARATHON",
+  TEAMS = "TEAMS",
 }
 
 export interface Lobby {
@@ -92,7 +92,12 @@ const sendLobbyMessage = (
   return lobbies[index];
 };
 const createLobby = (host: User, name: string) => {
-  const config: GameConfig = { mode: 0, questions: 15, category: 0, time: 60 };
+  const config: GameConfig = {
+    mode: GameMode.NORMAL,
+    questions: 15,
+    category: 0,
+    time: 60,
+  };
   const lobby: Lobby = {
     name: name,
     id: generateUniqueId(),
