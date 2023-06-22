@@ -1,4 +1,5 @@
 import {
+  GameConfig,
   Lobby,
   createLobby,
   getUpdatedLobby,
@@ -6,6 +7,7 @@ import {
   lobbies,
   removeUserFromLobby,
   sendLobbyMessage,
+  updateConfig,
 } from "@/gameLogic/lobby";
 import {
   User,
@@ -39,6 +41,12 @@ const SocketHandler = (req: any, res: any) => {
 
         if (lobby) {
           io.to(lobby.id).emit("update_lobby_res", lobby);
+        }
+      });
+      socket.on("update_config", (lobbyId: string, config: GameConfig) => {
+        const updatedLobby = updateConfig(lobbyId, config);
+        if (updatedLobby) {
+          io.to(lobbyId).emit("update_lobby_res", updatedLobby);
         }
       });
       socket.on("remove_user", (id: string) => {

@@ -18,7 +18,7 @@ export interface Lobby {
   game: GameData | null;
   chat: ChatMessage[];
 }
-interface GameConfig {
+export interface GameConfig {
   mode: GameMode;
   questions: number;
   category: number;
@@ -32,6 +32,13 @@ const generateUniqueId = (): string => {
   } else {
     return newId;
   }
+};
+const updateConfig = (lobbyId: string, config: GameConfig) => {
+  const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
+  if (index !== -1) {
+    lobbies[index].config = config;
+  }
+  return lobbies[index];
 };
 function removeUserFromLobby(userId: string): Lobby | null {
   let foundUser: User | undefined;
@@ -106,4 +113,5 @@ export {
   lobbies,
   getUpdatedLobby,
   sendLobbyMessage,
+  updateConfig,
 };

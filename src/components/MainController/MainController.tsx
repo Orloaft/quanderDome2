@@ -7,10 +7,11 @@ import { User } from "@/gameLogic/users";
 import { DashBoard } from "../DashBoard/DashBoard";
 import { LobbyList } from "../LobbyList/LobbyList";
 import { Player } from "@/gameLogic";
-import { Lobby } from "@/gameLogic/lobby";
+import { GameConfig, Lobby } from "@/gameLogic/lobby";
 import { LobbyView } from "../Lobby/Lobby";
 import ChatBox from "../Chat/Chat";
 import ChatInput from "../Chat/ChatInput";
+import { ConfigView } from "../Config/ConfigView";
 
 export const MainController = () => {
   const [socket, socketInitializer] = useSocket();
@@ -25,6 +26,9 @@ export const MainController = () => {
   };
   const sendMessage = (message: string) => {
     socket?.emit("send_message", lobby?.id, user?.name, message);
+  };
+  const updateConfig = (config: GameConfig) => {
+    lobby && socket?.emit("update_config", config, lobby.id);
   };
   const signOut = () => {
     user && socket?.emit("remove_user", user.id);
@@ -53,29 +57,29 @@ export const MainController = () => {
   }, [socket, handleSocketInitialization, user, data]);
   return (
     <UserContext.Provider value={{ user }}>
-      {(user && socket && !lobby && (
+      {user && socket && !lobby ? (
         <>
           <DashBoard signOut={signOut} />
           <LobbyList socket={socket} />
         </>
-      )) ||
-        (lobby && (
-          <>
-            <LobbyView lobby={lobby} />
-            <ChatBox messages={lobby.chat} />
-            <ChatInput onSendMessage={sendMessage} />
-            <button
-              onClick={() => {
-                user && socket?.emit("leave_lobby", user.id);
-              }}
-            >
-              leave lobby
-            </button>
-          </>
-        )) ||
-        (isConnected && (
-          <SignInView socket={socket} handleSubmit={signIn} />
-        )) || <p>please wait...</p>}
+      ) : user && lobby ? (
+        <>
+          <LobbyView
+            userId={user.id}
+            lobby={lobby}
+            onConfigChange={updateConfig}
+          />
+          <ChatBox messages={lobby.chat} />
+          <ChatInput onSendMessage={sendMessage} />
+          <button onClick={() => user && socket?.emit("leave_lobby", user.id)}>
+            Leave lobby
+          </button>
+        </>
+      ) : isConnected ? (
+        <SignInView socket={socket} handleSubmit={signIn} />
+      ) : (
+        <p>Please wait...</p>
+      )}
     </UserContext.Provider>
   );
 };
