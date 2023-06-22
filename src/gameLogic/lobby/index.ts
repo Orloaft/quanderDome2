@@ -50,6 +50,8 @@ function removeUserFromLobby(userId: string): Lobby | null {
       const index = lobby.users.findIndex((user: User) => user.id === userId);
       if (index !== -1) {
         oldLobby.users.splice(index, 1);
+        oldLobby.hostId === foundUser.id &&
+          (oldLobby.hostId = oldLobby.users[0].id);
         !oldLobby.users.length && closeLobby(oldLobby.id);
       }
     }
