@@ -1,6 +1,6 @@
 import { ChatMessage } from "@/components/Chat/Chat";
 import { GameData } from "..";
-import { User } from "../users";
+import { User, updateSocket } from "../users";
 import { v4 as uuidv4 } from "uuid";
 export enum GameMode {
   NORMAL = "NORMAL",
@@ -73,6 +73,21 @@ const closeLobby = (lobbyId: string) => {
     lobbies.splice(index, 1);
   }
 };
+const updateSocketInLobby = (
+  userId: string,
+  socketId: string
+): Lobby | null => {
+  let updatedLobby: Lobby | null = null;
+  lobbies.some((lobby) => {
+    let user = lobby.users.find((user) => user.id === userId);
+
+    if (user) {
+      user.socketId = socketId;
+      updatedLobby = lobby;
+    }
+  });
+  return updatedLobby;
+};
 const joinLobby = (user: User, id: string) => {
   const index = lobbies.findIndex((lobby) => lobby.id === id);
   if (index !== -1) {
@@ -119,4 +134,5 @@ export {
   getUpdatedLobby,
   sendLobbyMessage,
   updateConfig,
+  updateSocketInLobby,
 };
