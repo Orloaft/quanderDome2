@@ -1,5 +1,5 @@
-import { lobbies } from "@/gameLogic/lobbyController";
-import { users } from "@/gameLogic/playersController";
+import { lobbies } from "@/gameLogic/lobby";
+import { users } from "@/gameLogic/users";
 
 const verifyUsername = (name: string) => {
   if (name.length < 3) {

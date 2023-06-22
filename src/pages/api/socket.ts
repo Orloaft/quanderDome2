@@ -1,13 +1,21 @@
-import { createLobby, lobbies } from "@/gameLogic/lobbyController";
+import {
+  Lobby,
+  createLobby,
+  getUpdatedLobby,
+  joinLobby,
+  lobbies,
+  removeUserFromLobby,
+} from "@/gameLogic/lobby";
 import {
   User,
   addUser,
   removeUser,
   removeUserSocket,
   updateSocket,
-} from "@/gameLogic/playersController";
+} from "@/gameLogic/users";
 import { verifyLobby, verifyUsername } from "@/utils/verify";
 import { Server } from "Socket.IO";
+import { LanguageServiceMode } from "typescript";
 
 const SocketHandler = (req: any, res: any) => {
   if (res.socket.server.io) {
@@ -20,6 +28,10 @@ const SocketHandler = (req: any, res: any) => {
       socket.on("disconnect", () => {
         console.log(`Socket ${socket.id} disconnected`);
         removeUserSocket(socket.id);
+        let lobby: Lobby | null = getUpdatedLobby(socket.id);
+        if (lobby) {
+          io.to(lobby.id).emit("update_lobby_res", lobby);
+        }
       });
       socket.on("remove_user", (id: string) => {
         removeUser(id);
@@ -37,15 +49,32 @@ const SocketHandler = (req: any, res: any) => {
           io.to(socket.id).emit("add_user_res", addUser(socket.id, username));
         }
       });
+      socket.on("join_lobby", (user: User, id: string) => {
+        const lobby = joinLobby(user, id);
+        if (lobby) {
+          socket.join(lobby.id);
+          io.to(lobby.id).emit("enter_lobby_res", lobby);
+        }
+      });
       socket.on("get_lobbies", () => {
         io.to(socket.id).emit("get_lobbies_res", lobbies);
       });
+      socket.on("leave_lobby", (userId: string) => {
+        const oldLobby = removeUserFromLobby(userId);
+
+        if (oldLobby) {
+          socket.leave(oldLobby.id);
+          io.to(oldLobby.id).emit("update_lobby_res", oldLobby);
+          io.to(socket.id).emit("leave_lobby_res");
+        }
+      });
       socket.on("create_lobby", (name: string, host: User) => {
-        console.log(host);
         const verifyMsg: string = verifyLobby(name);
         io.to(socket.id).emit("create_lobby_message", verifyMsg);
         if (verifyMsg === "Great choice") {
-          io.to(socket.id).emit("create_lobby_res", createLobby(host, name));
+          let newLobby = createLobby(host, name);
+          socket.join(newLobby.id);
+          io.to(socket.id).emit("enter_lobby_res", newLobby);
         }
       });
     });

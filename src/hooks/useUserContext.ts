@@ -1,4 +1,4 @@
-import { User } from "@/gameLogic/playersController";
+import { User } from "@/gameLogic/users";
 import { createContext, useContext } from "react";
 
 // UserContext definition

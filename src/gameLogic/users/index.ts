@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { removeUserFromLobby } from "../lobby";
 export interface User {
   id: string;
   name: string;
@@ -10,7 +11,7 @@ const checkAndRemoveInactive = (id: string) => {
   const index = users.findIndex((user) => user.id === id);
   const user = users[index];
   if (user) {
-    !user.socketId && removeUser(id);
+    !user.socketId && (removeUser(id), removeUserFromLobby(id));
   } else {
     clearInterval(intervals[id]);
   }

@@ -1,7 +1,7 @@
-import { Lobby } from "@/gameLogic/lobbyController";
+import { Lobby } from "@/gameLogic/lobby";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import handleSocketEvents from "./socketHandlers";
+import handleSocketEvents, { tearDownSocketEvents } from "./socketHandlers";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { useUserContext } from "@/hooks/useUserContext";
 
@@ -20,13 +20,16 @@ export const LobbyList = ({
     socket.emit("create_lobby", lobbyName, user);
   };
   const joinLobby = (id: string) => {
-    socket.emit("join_lobby", id);
+    socket.emit("join_lobby", user, id);
   };
   useEffect(() => {
     handleSocketEvents(socket, setData, data);
+    return () => {
+      socket && tearDownSocketEvents(socket);
+    };
   }, [socket, data]);
   const { lobbies, message } = data;
-  console.log(message);
+
   return (
     <div>
       <h2>Lobby List</h2>

@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import SignInView from "../SignIn/SignIn";
 import useSocket from "@/hooks/useSocket";
 import { UserContext, useUserContext } from "@/hooks/useUserContext";
-import handleSocketEvents from "./socketHandlers";
-import { User } from "@/gameLogic/playersController";
+import handleSocketEvents, { tearDownSocketEvents } from "./socketHandlers";
+import { User } from "@/gameLogic/users";
 import { DashBoard } from "../DashBoard/DashBoard";
 import { LobbyList } from "../LobbyList/LobbyList";
-import { Player } from "@/gameLogic/gameController";
-import { Lobby } from "@/gameLogic/lobbyController";
+import { Player } from "@/gameLogic";
+import { Lobby } from "@/gameLogic/lobby";
 import { LobbyView } from "../Lobby/Lobby";
 
 export const MainController = () => {
@@ -42,6 +42,9 @@ export const MainController = () => {
     } else {
       handleSocketInitialization();
     }
+    return () => {
+      socket && tearDownSocketEvents(socket);
+    };
   }, [socket, handleSocketInitialization, user, data]);
   return (
     <UserContext.Provider value={{ user }}>
@@ -51,7 +54,18 @@ export const MainController = () => {
           <LobbyList socket={socket} />
         </>
       )) ||
-        (lobby && <LobbyView lobby={lobby} />) ||
+        (lobby && (
+          <>
+            <LobbyView lobby={lobby} />
+            <button
+              onClick={() => {
+                user && socket?.emit("leave_lobby", user.id);
+              }}
+            >
+              leave lobby
+            </button>
+          </>
+        )) ||
         (isConnected && (
           <SignInView socket={socket} handleSubmit={signIn} />
         )) || <p>please wait...</p>}

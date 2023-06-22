@@ -1,6 +1,9 @@
-import { Lobby } from "@/gameLogic/lobbyController";
+import { Lobby } from "@/gameLogic/lobby";
 import { Socket } from "socket.io-client";
-
+export const tearDownSocketEvents = (socket: Socket) => {
+  socket.off("get_lobbies_res");
+  socket.off("create_lobby_message");
+};
 const handleSocketEvents = (
   socket: Socket,
   setData: React.Dispatch<React.SetStateAction<any>>,

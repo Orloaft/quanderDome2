@@ -1,5 +1,5 @@
-import { GameData } from "./gameController";
-import { User } from "./playersController";
+import { GameData } from "..";
+import { User } from "../users";
 import { v4 as uuidv4 } from "uuid";
 enum GameMode {
   NORMAL,
@@ -31,22 +31,33 @@ const generateUniqueId = (): string => {
     return newId;
   }
 };
-function removeUserFromLobby(userId: string): User | undefined {
+function removeUserFromLobby(userId: string): Lobby | null {
   let foundUser: User | undefined;
-
+  let oldLobby: Lobby | null = null;
   lobbies.some((lobby) => {
     foundUser = lobby.users.find((user) => user.id === userId);
     if (foundUser) {
+      oldLobby = lobby;
       const index = lobby.users.findIndex((user: User) => user.id === userId);
       if (index !== -1) {
-        lobby.users.splice(index, 1);
+        oldLobby.users.splice(index, 1);
+        !oldLobby.users.length && closeLobby(oldLobby.id);
       }
     }
-    return foundUser !== undefined;
   });
 
-  return foundUser;
+  return oldLobby;
 }
+const getUpdatedLobby = (socketId: string): Lobby | null => {
+  lobbies.some((lobby) => {
+    let user = lobby.users.find((user) => user.socketId === socketId);
+    if (user) {
+      user.socketId = "";
+      return lobby;
+    }
+  });
+  return null;
+};
 const closeLobby = (lobbyId: string) => {
   const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
   if (index !== -1) {
@@ -73,4 +84,11 @@ const createLobby = (host: User, name: string) => {
   !lobbies.find((lobby) => lobby.hostId === host.id) && lobbies.push(lobby);
   return lobby;
 };
-export { createLobby, joinLobby, removeUserFromLobby, closeLobby, lobbies };
+export {
+  createLobby,
+  joinLobby,
+  removeUserFromLobby,
+  closeLobby,
+  lobbies,
+  getUpdatedLobby,
+};

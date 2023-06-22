@@ -1,4 +1,4 @@
-import { User } from "./playersController";
+import { User } from "./users";
 
 export interface GameData {
   time: number;
