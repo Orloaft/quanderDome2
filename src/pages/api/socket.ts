@@ -1,5 +1,12 @@
-import { addUser, removeUser } from "@/gameLogic/playersController";
-import { verifyUsername } from "@/utils/verify";
+import { createLobby, lobbies } from "@/gameLogic/lobbyController";
+import {
+  User,
+  addUser,
+  removeUser,
+  removeUserSocket,
+  updateSocket,
+} from "@/gameLogic/playersController";
+import { verifyLobby, verifyUsername } from "@/utils/verify";
 import { Server } from "Socket.IO";
 
 const SocketHandler = (req: any, res: any) => {
@@ -10,16 +17,35 @@ const SocketHandler = (req: any, res: any) => {
     const io = new Server(res.socket.server);
     res.socket.server.io = io;
     io.on("connect", (socket) => {
-      console.log(socket.id);
       socket.on("disconnect", () => {
         console.log(`Socket ${socket.id} disconnected`);
-        removeUser(socket.id);
+        removeUserSocket(socket.id);
+      });
+      socket.on("remove_user", (id: string) => {
+        removeUser(id);
+      });
+      socket.on("reconnect_user", (id: string) => {
+        console.log("reconnecting");
+        const user = updateSocket(id, socket.id);
+        user && io.to(socket.id).emit("add_user_res", user);
       });
       socket.on("add_user", (username: string) => {
         let verifyMsg = verifyUsername(username);
         io.to(socket.id).emit("username_msg", verifyMsg);
-        if (verifyMsg === "ok") {
+        if (verifyMsg === "Great choice") {
+          console.log("adding user");
           io.to(socket.id).emit("add_user_res", addUser(socket.id, username));
+        }
+      });
+      socket.on("get_lobbies", () => {
+        io.to(socket.id).emit("get_lobbies_res", lobbies);
+      });
+      socket.on("create_lobby", (name: string, host: User) => {
+        console.log(host);
+        const verifyMsg: string = verifyLobby(name);
+        io.to(socket.id).emit("create_lobby_message", verifyMsg);
+        if (verifyMsg === "Great choice") {
+          io.to(socket.id).emit("create_lobby_res", createLobby(host, name));
         }
       });
     });

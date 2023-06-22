@@ -1,3 +1,4 @@
+import { lobbies } from "@/gameLogic/lobbyController";
 import { users } from "@/gameLogic/playersController";
 
 const verifyUsername = (name: string) => {
@@ -10,6 +11,18 @@ const verifyUsername = (name: string) => {
   if (users.find((user) => user.name === name)) {
     return name + " has been taken";
   }
-  return "ok";
+  return "Great choice";
 };
-export { verifyUsername };
+const verifyLobby = (name: string) => {
+  if (name.length < 1) {
+    return "name should be at least 1 character";
+  }
+  if (name.length > 12) {
+    return "name cannot exceed 12 characters";
+  }
+  if (lobbies.find((lobby) => lobby.name === name)) {
+    return name + " has been taken";
+  }
+  return "Great choice";
+};
+export { verifyUsername, verifyLobby };

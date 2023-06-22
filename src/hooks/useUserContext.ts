@@ -3,8 +3,7 @@ import { createContext, useContext } from "react";
 
 // UserContext definition
 interface UserContextType {
-  user: User | undefined;
-  setUser: (user: User) => void;
+  user: User | null | undefined;
 }
 const UserContext = createContext<UserContextType | undefined>(undefined);
 // Custom hook to use UserContext

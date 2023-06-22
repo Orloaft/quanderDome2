@@ -1,12 +1,12 @@
 import { useUserContext } from "@/hooks/useUserContext";
 
-export const DashBoard = () => {
+export const DashBoard = ({ signOut }: { signOut: () => void }) => {
   const { user } = useUserContext();
   return (
     <div>
-      <p>{user?.id}</p>
       <p>{user?.name}</p>
-      <p>{user?.socketId}</p>
+      <p>{user?.id}</p>
+      <button onClick={signOut}>sign out</button>
     </div>
   );
 };
