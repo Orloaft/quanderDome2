@@ -4,6 +4,7 @@ export interface User {
   id: string;
   name: string;
   socketId: string;
+  isReady: boolean;
 }
 const intervals: any = {};
 const users: User[] = [];
@@ -27,7 +28,7 @@ const generateUniqueId = (): string => {
 
 const addUser = (socketId: string, name: string): User => {
   const id = generateUniqueId();
-  const user: User = { id, name, socketId: socketId };
+  const user: User = { id, name, socketId: socketId, isReady: false };
   users.push(user);
   intervals[id] = setInterval((id: string) => {
     checkAndRemoveInactive(id);

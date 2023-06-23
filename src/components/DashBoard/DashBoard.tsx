@@ -4,8 +4,8 @@ export const DashBoard = ({ signOut }: { signOut: () => void }) => {
   const { user } = useUserContext();
   return (
     <div>
-      <p>{user?.name}</p>
-      <p>{user?.id}</p>
+      <p>welcome {user?.name}</p>
+
       <button onClick={signOut}>sign out</button>
     </div>
   );

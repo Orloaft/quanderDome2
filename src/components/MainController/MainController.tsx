@@ -25,8 +25,8 @@ export const MainController = () => {
   const signIn = (name: string) => {
     socket?.emit("add_user", name);
   };
-  const leaveLobby = (id: string) =>
-    user && socket?.emit("leave_lobby", user.id);
+  const leaveLobby = (id: string, socketId: string) =>
+    user && socket?.emit("leave_lobby", id, socketId);
   const sendMessage = (message: string) => {
     socket?.emit("send_message", lobby?.id, user?.name, message);
   };
@@ -73,10 +73,10 @@ export const MainController = () => {
             lobby={lobby}
             onConfigChange={updateConfig}
             leaveLobby={leaveLobby}
+            socketId={socket && socket.id}
           />
           <ChatBox messages={lobby.chat} />
           <ChatInput onSendMessage={sendMessage} />
-          <button onClick={() => leaveLobby(user.id)}>Leave lobby</button>
         </>
       ) : isConnected && !user ? (
         <SignInView socket={socket} handleSubmit={signIn} />

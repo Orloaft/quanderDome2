@@ -1,3 +1,4 @@
+import { startGame } from "@/gameLogic";
 import {
   GameConfig,
   Lobby,
@@ -44,6 +45,12 @@ const SocketHandler = (req: any, res: any) => {
           io.to(lobby.id).emit("update_lobby_res", lobby);
         }
       });
+      socket.on("start_game", async (lobbyId: string) => {
+        const updatedLobby = await startGame(lobbyId);
+        if (updatedLobby) {
+          io.to(lobbyId).emit("update_lobby_res", updatedLobby);
+        }
+      });
       socket.on("update_config", (lobbyId: string, config: GameConfig) => {
         const updatedLobby = updateConfig(lobbyId, config);
         if (updatedLobby) {
@@ -81,13 +88,13 @@ const SocketHandler = (req: any, res: any) => {
       socket.on("get_lobbies", () => {
         io.to(socket.id).emit("get_lobbies_res", lobbies);
       });
-      socket.on("leave_lobby", (userId: string) => {
+      socket.on("leave_lobby", (userId: string, socketId: string) => {
         const oldLobby = removeUserFromLobby(userId);
-
-        if (oldLobby) {
-          socket.leave(oldLobby.id);
+        const userSocket = io.sockets.sockets.get(socketId);
+        if (oldLobby && userSocket) {
+          userSocket.leave(oldLobby.id);
           io.to(oldLobby.id).emit("update_lobby_res", oldLobby);
-          io.to(socket.id).emit("leave_lobby_res");
+          io.to(socketId).emit("leave_lobby_res");
         }
       });
       socket.on("create_lobby", (name: string, host: User) => {

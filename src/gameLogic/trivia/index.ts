@@ -1,10 +1,19 @@
 import axios from "axios";
 
-interface TriviaQuestion {
+export interface TriviaQuestion {
   category: string;
   question: string;
   correctAnswer: string;
-  // Add other properties as needed
+  countdown: number;
+  answers: string[];
+}
+interface OpenTriviaDBQuestion {
+  category: string;
+  type: "multiple" | "boolean";
+  difficulty: "easy" | "medium" | "hard";
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
 }
 
 const fetchTriviaQuestions = async (
@@ -16,14 +25,20 @@ const fetchTriviaQuestions = async (
       `https://opentdb.com/api.php?amount=${amount}&category=${category}&type=multiple`
     );
 
-    const data = response.data.results;
+    const data: OpenTriviaDBQuestion[] = response.data.results;
 
-    const triviaQuestions: TriviaQuestion[] = data.map((questionData: any) => ({
-      category: questionData.category,
-      question: questionData.question,
-      correctAnswer: questionData.correct_answer,
-      // Extract and assign other relevant properties
-    }));
+    const triviaQuestions: TriviaQuestion[] = data.map(
+      (questionData: OpenTriviaDBQuestion) => ({
+        category: questionData.category,
+        question: questionData.question,
+        correctAnswer: questionData.correct_answer,
+        answers: [
+          ...questionData.incorrect_answers,
+          questionData.correct_answer,
+        ].sort(() => Math.random() - 0.5),
+        countdown: 3,
+      })
+    );
 
     return triviaQuestions;
   } catch (error) {
