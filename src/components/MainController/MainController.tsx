@@ -21,6 +21,7 @@ export const MainController = () => {
     lobby: Lobby | null;
   }>({ user: null, isConnected: false, lobby: null });
   const { user, isConnected, lobby } = data;
+
   const signIn = (name: string) => {
     socket?.emit("add_user", name);
   };
@@ -42,9 +43,9 @@ export const MainController = () => {
     }
   }, [socketInitializer, data]);
   useEffect(() => {
-    let userId = sessionStorage.getItem("userId");
     if (socket) {
       handleSocketEvents(socket, setData, data);
+      let userId = sessionStorage.getItem("userId");
       if (!user && userId) {
         socket.emit("reconnect_user", userId);
       }
@@ -55,6 +56,7 @@ export const MainController = () => {
       socket && tearDownSocketEvents(socket);
     };
   }, [socket, handleSocketInitialization, user, data]);
+
   return (
     <UserContext.Provider value={{ user }}>
       {user && socket && !lobby ? (
@@ -75,7 +77,7 @@ export const MainController = () => {
             Leave lobby
           </button>
         </>
-      ) : isConnected ? (
+      ) : isConnected && !user ? (
         <SignInView socket={socket} handleSubmit={signIn} />
       ) : (
         <p>Please wait...</p>

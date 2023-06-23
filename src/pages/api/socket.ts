@@ -55,28 +55,27 @@ const SocketHandler = (req: any, res: any) => {
       });
       socket.on("reconnect_user", (id: string) => {
         const user = updateSocket(id, socket.id);
-        user && io.to(socket.id).emit("add_user_res", user);
-        const lobby = updateSocketInLobby(id, socket.id);
 
-        if (lobby) {
-          socket.join(lobby.id);
-
-          io.to(lobby.id).emit("update_lobby_res", lobby);
+        if (user) {
+          io.to(socket.id).emit("add_user_res", user);
         }
       });
+
       socket.on("add_user", (username: string) => {
         let verifyMsg = verifyUsername(username);
         io.to(socket.id).emit("username_msg", verifyMsg);
         if (verifyMsg === "Great choice") {
-          console.log("adding user");
           io.to(socket.id).emit("add_user_res", addUser(socket.id, username));
         }
       });
       socket.on("join_lobby", (user: User, id: string) => {
+        //make sure join also works for rejoin and updates socket
         const lobby = joinLobby(user, id);
         if (lobby) {
           socket.join(lobby.id);
           io.to(lobby.id).emit("enter_lobby_res", lobby);
+        } else {
+          io.to(socket.id).emit("enter_lobby_res", null);
         }
       });
       socket.on("get_lobbies", () => {

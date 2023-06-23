@@ -48,11 +48,18 @@ function removeUserFromLobby(userId: string): Lobby | null {
     if (foundUser) {
       oldLobby = lobby;
       const index = lobby.users.findIndex((user: User) => user.id === userId);
+
       if (index !== -1) {
         oldLobby.users.splice(index, 1);
-        oldLobby.hostId === foundUser.id &&
-          (oldLobby.hostId = oldLobby.users[0].id);
-        !oldLobby.users.length && closeLobby(oldLobby.id);
+        if (oldLobby.users.find((user: User) => user.socketId.length !== 0)) {
+          oldLobby.hostId === foundUser.id &&
+            oldLobby.users[0] &&
+            (oldLobby.hostId = oldLobby.users[0].id);
+          !oldLobby.users.length && closeLobby(oldLobby.id);
+        } else {
+          closeLobby(lobby.id);
+          return null;
+        }
       }
     }
   });
@@ -60,14 +67,19 @@ function removeUserFromLobby(userId: string): Lobby | null {
   return oldLobby;
 }
 const getUpdatedLobby = (socketId: string): Lobby | null => {
+  let updatedLobby = null;
   lobbies.some((lobby) => {
     let user = lobby.users.find((user) => user.socketId === socketId);
     if (user) {
       user.socketId = "";
-      return lobby;
+      if (lobby.users.find((user: User) => user.socketId.length !== 0)) {
+        updatedLobby = lobby;
+      } else {
+        closeLobby(lobby.id);
+      }
     }
   });
-  return null;
+  return updatedLobby;
 };
 const closeLobby = (lobbyId: string) => {
   const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
@@ -93,7 +105,14 @@ const updateSocketInLobby = (
 const joinLobby = (user: User, id: string) => {
   const index = lobbies.findIndex((lobby) => lobby.id === id);
   if (index !== -1) {
-    lobbies[index].users.push(user);
+    let staleUser = lobbies[index].users.find((u) => u.id === user.id);
+    if (staleUser) {
+      staleUser.socketId = user.socketId;
+    } else {
+      lobbies[index].users.push(user);
+    }
+  } else {
+    return null;
   }
   return lobbies[index];
 };

@@ -1,5 +1,5 @@
 import { Lobby } from "@/gameLogic/lobby";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import handleSocketEvents, { tearDownSocketEvents } from "./socketHandlers";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
@@ -10,6 +10,7 @@ export const LobbyList = ({
 }: {
   socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 }) => {
+  let lobbyId = sessionStorage.getItem("lobbyId");
   const user = useUserContext().user;
   const [lobbyName, setLobbyName] = useState("");
   const [data, setData] = useState<{ lobbies: Lobby[]; message: string }>({
@@ -19,15 +20,24 @@ export const LobbyList = ({
   const createLobby = () => {
     socket.emit("create_lobby", lobbyName, user);
   };
-  const joinLobby = (id: string) => {
-    socket.emit("join_lobby", user, id);
-  };
+  const joinLobby = useCallback(
+    (id: string) => {
+      socket.emit("join_lobby", user, id);
+    },
+    [socket, user]
+  );
   useEffect(() => {
     handleSocketEvents(socket, setData, data);
+    if (lobbyId) {
+      joinLobby(lobbyId);
+    } else {
+      socket.emit("get_lobbies");
+    }
+
     return () => {
       socket && tearDownSocketEvents(socket);
     };
-  }, [socket, data]);
+  }, [socket, data, joinLobby, lobbyId]);
   const { lobbies, message } = data;
 
   return (

@@ -23,8 +23,13 @@ const handleSocketEvents = (
     setData({ ...data, lobby: null });
   });
   socket.on("enter_lobby_res", (lobby: Lobby) => {
-    sessionStorage.setItem("lobbyId", lobby.id);
-    setData({ ...data, lobby: lobby });
+    if (lobby) {
+      sessionStorage.setItem("lobbyId", lobby.id);
+      setData({ ...data, lobby: lobby });
+    } else {
+      sessionStorage.removeItem("lobbyId");
+      setData({ ...data, lobby: lobby });
+    }
   });
 };
 
