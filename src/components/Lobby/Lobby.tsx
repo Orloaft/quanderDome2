@@ -6,10 +6,12 @@ export const LobbyView = ({
   lobby,
   onConfigChange,
   userId,
+  leaveLobby,
 }: {
   lobby: Lobby;
   onConfigChange: any;
   userId: string;
+  leaveLobby: any;
 }) => {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -19,11 +21,23 @@ export const LobbyView = ({
         onChange={onConfigChange}
         isHost={userId === lobby.hostId}
       />
+
       {lobby.users.map((user: User) => {
         return (
-          <p key={user.id} style={{ color: user.socketId ? "black" : "grey" }}>
-            {user.name}
-          </p>
+          <div key={user.id}>
+            <p style={{ color: user.socketId ? "black" : "grey" }}>
+              {user.name}
+            </p>
+            {userId === lobby.hostId && (
+              <div
+                onClick={() => {
+                  leaveLobby(user.id);
+                }}
+              >
+                x
+              </div>
+            )}
+          </div>
         );
       })}
     </div>
