@@ -33,6 +33,12 @@ export const MainController = () => {
   const updateConfig = (config: GameConfig) => {
     lobby && socket?.emit("update_config", lobby.id, config);
   };
+  const startGame = () => {
+    lobby && socket?.emit("start_game", lobby.id);
+  };
+  const toggleReady = () => {
+    socket?.emit("toggle_ready");
+  };
   const signOut = () => {
     user && socket?.emit("remove_user", user.id);
     sessionStorage.removeItem("userId");
@@ -74,6 +80,8 @@ export const MainController = () => {
             onConfigChange={updateConfig}
             leaveLobby={leaveLobby}
             socketId={socket && socket.id}
+            toggleReady={toggleReady}
+            startGame={startGame}
           />
           <ChatBox messages={lobby.chat} />
           <ChatInput onSendMessage={sendMessage} />

@@ -17,6 +17,7 @@ const checkAndRemoveInactive = (id: string) => {
     clearInterval(intervals[id]);
   }
 };
+
 const generateUniqueId = (): string => {
   let newId = uuidv4();
   if (users.find((user) => user.id === newId)) {

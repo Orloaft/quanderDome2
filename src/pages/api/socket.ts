@@ -8,6 +8,7 @@ import {
   lobbies,
   removeUserFromLobby,
   sendLobbyMessage,
+  toggleReady,
   updateConfig,
   updateSocketInLobby,
 } from "@/gameLogic/lobby";
@@ -43,6 +44,12 @@ const SocketHandler = (req: any, res: any) => {
 
         if (lobby) {
           io.to(lobby.id).emit("update_lobby_res", lobby);
+        }
+      });
+      socket.on("toggle_ready", () => {
+        const updatedLobby = toggleReady(socket.id);
+        if (updatedLobby) {
+          io.to(updatedLobby.id).emit("update_lobby_res", updatedLobby);
         }
       });
       socket.on("start_game", async (lobbyId: string) => {

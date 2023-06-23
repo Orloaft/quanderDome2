@@ -1,5 +1,5 @@
 import { ChatMessage } from "@/components/Chat/Chat";
-import { GameData } from "..";
+import { GameData, Player } from "..";
 import { User, updateSocket } from "../users";
 import { v4 as uuidv4 } from "uuid";
 export enum GameMode {
@@ -13,7 +13,7 @@ export interface Lobby {
   name: string;
   id: string;
   hostId: string;
-  users: User[];
+  users: Player[];
   config: GameConfig;
   game: GameData | null;
   chat: ChatMessage[];
@@ -32,6 +32,17 @@ const generateUniqueId = (): string => {
   } else {
     return newId;
   }
+};
+const toggleReady = (socketId: string): Lobby | null => {
+  let updatedLobby = null;
+  lobbies.some((lobby) => {
+    const readyUser = lobby.users.find((user) => user.socketId === socketId);
+    if (readyUser) {
+      readyUser.isReady = !readyUser.isReady;
+      updatedLobby = lobby;
+    }
+  });
+  return updatedLobby;
 };
 const updateConfig = (lobbyId: string, config: GameConfig) => {
   const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
@@ -109,7 +120,13 @@ const joinLobby = (user: User, id: string) => {
     if (staleUser) {
       staleUser.socketId = user.socketId;
     } else {
-      lobbies[index].users.push(user);
+      lobbies[index].users.push({
+        ...user,
+        avatar: "/avatars/avatar1.jpg",
+        life: 0,
+        points: 0,
+        color: "black",
+      });
     }
   } else {
     return null;
@@ -138,7 +155,15 @@ const createLobby = (host: User, name: string) => {
     name: name,
     id: generateUniqueId(),
     hostId: host.id,
-    users: [host],
+    users: [
+      {
+        ...host,
+        avatar: "/avatars/avatar1.jpg",
+        life: 0,
+        points: 0,
+        color: "black",
+      },
+    ],
     config: config,
     game: null,
     chat: [],
@@ -156,4 +181,5 @@ export {
   sendLobbyMessage,
   updateConfig,
   updateSocketInLobby,
+  toggleReady,
 };

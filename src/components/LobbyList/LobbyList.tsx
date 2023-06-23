@@ -4,7 +4,7 @@ import { Socket } from "socket.io-client";
 import handleSocketEvents, { tearDownSocketEvents } from "./socketHandlers";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { useUserContext } from "@/hooks/useUserContext";
-
+import Image from "next/image";
 export const LobbyList = ({
   socket,
 }: {
@@ -51,13 +51,16 @@ export const LobbyList = ({
           placeholder="Enter lobby name"
         />
         <button onClick={createLobby}>Create Lobby</button>
-        <button
+
+        <Image
           onClick={() => {
             socket.emit("get_lobbies");
           }}
-        >
-          get lobbies
-        </button>
+          height={15}
+          width={15}
+          src="/refresh.svg"
+          alt="Refresh"
+        />
         {message}
       </div>
       <ul>

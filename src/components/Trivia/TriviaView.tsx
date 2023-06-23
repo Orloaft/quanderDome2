@@ -8,7 +8,7 @@ interface TriviaBoxProps {
 const TriviaBox: React.FC<TriviaBoxProps> = ({ question }) => {
   return (
     <div className="trivia-box">
-      {question.countdown > 0 ? (
+      {false ? (
         <div className="countdown">{question.countdown}</div>
       ) : (
         <div className="question">{question.question}</div>
