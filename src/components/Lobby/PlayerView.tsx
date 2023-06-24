@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Select from "react-select";
+import { Player } from "@/gameLogic";
 
-const PlayerView = ({ player, toggleColor, toggleAvatar }: any) => {
+const PlayerView = ({
+  player,
+  updatePlayer,
+}: {
+  player: Player;
+  updatePlayer: (e: any) => void;
+}) => {
   const avatarOptions = [
     {
       value: "/avatars/avatar1.jpg",
@@ -116,25 +123,47 @@ const PlayerView = ({ player, toggleColor, toggleAvatar }: any) => {
       label: <div style={{ background: "black", height: "2rem" }}></div>,
     },
   ];
+  const handleChange = (...args: any) => {
+    updatePlayer({ name: args[1].name, value: args[0].value });
+  };
+  if (sessionStorage.getItem("userId") === player.id) {
+    return (
+      <div>
+        <Select
+          name="color"
+          options={colorOptions}
+          value={colorOptions.find((option) => option.value === player.color)}
+          onChange={handleChange}
+          placeholder="Select a color"
+        />
+        <Select
+          name="avatar"
+          options={avatarOptions}
+          value={avatarOptions.find((option) => option.value === player.avatar)}
+          onChange={handleChange}
+          placeholder="Select an image"
+        />
 
-  return (
-    <div>
-      <Select
-        options={colorOptions}
-        value={colorOptions.find((option) => option.value === player.color)}
-        onChange={toggleColor}
-        placeholder="Select a color"
-      />
-      <Select
-        options={avatarOptions}
-        value={avatarOptions.find((option) => option.value === player.avatar)}
-        onChange={toggleAvatar}
-        placeholder="Select an image"
-      />
-
-      <Image width={30} height={30} src={player.avatar} alt="Selected Image" />
-    </div>
-  );
+        <Image
+          width={30}
+          height={30}
+          src={player.avatar}
+          alt="Selected Image"
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <Image
+          width={30}
+          height={30}
+          src={player.avatar}
+          alt="Selected Image"
+        />
+      </div>
+    );
+  }
 };
 
 export default PlayerView;

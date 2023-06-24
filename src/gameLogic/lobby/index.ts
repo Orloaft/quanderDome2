@@ -33,17 +33,7 @@ const generateUniqueId = (): string => {
     return newId;
   }
 };
-const toggleReady = (socketId: string): Lobby | null => {
-  let updatedLobby = null;
-  lobbies.some((lobby) => {
-    const readyUser = lobby.users.find((user) => user.socketId === socketId);
-    if (readyUser) {
-      readyUser.isReady = !readyUser.isReady;
-      updatedLobby = lobby;
-    }
-  });
-  return updatedLobby;
-};
+
 const updateConfig = (lobbyId: string, config: GameConfig) => {
   const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
   if (index !== -1) {
@@ -144,6 +134,24 @@ const sendLobbyMessage = (
   }
   return lobbies[index];
 };
+const updatePlayer = (playerId: string, lobbyId: string, e: any) => {
+  //make sure all input names match player prop names
+  const { name, value } = e;
+  console.log(e);
+  const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
+  if (index !== -1) {
+    const pIndex = lobbies[index].users.findIndex(
+      (player) => player.id === playerId
+    );
+    if (pIndex !== -1) {
+      lobbies[index].users[pIndex] = {
+        ...lobbies[index].users[pIndex],
+        [name]: value,
+      };
+    }
+  }
+  return lobbies[index];
+};
 const createLobby = (host: User, name: string) => {
   const config: GameConfig = {
     mode: GameMode.NORMAL,
@@ -172,6 +180,7 @@ const createLobby = (host: User, name: string) => {
   return lobby;
 };
 export {
+  updatePlayer,
   createLobby,
   joinLobby,
   removeUserFromLobby,
@@ -181,5 +190,4 @@ export {
   sendLobbyMessage,
   updateConfig,
   updateSocketInLobby,
-  toggleReady,
 };

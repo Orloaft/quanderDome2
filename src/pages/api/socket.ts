@@ -1,4 +1,4 @@
-import { startGame } from "@/gameLogic";
+import { Player, startGame } from "@/gameLogic";
 import {
   GameConfig,
   Lobby,
@@ -8,9 +8,8 @@ import {
   lobbies,
   removeUserFromLobby,
   sendLobbyMessage,
-  toggleReady,
   updateConfig,
-  updateSocketInLobby,
+  updatePlayer,
 } from "@/gameLogic/lobby";
 import {
   User,
@@ -21,7 +20,6 @@ import {
 } from "@/gameLogic/users";
 import { verifyLobby, verifyUsername } from "@/utils/verify";
 import { Server } from "Socket.IO";
-import { LanguageServiceMode } from "typescript";
 
 const SocketHandler = (req: any, res: any) => {
   if (res.socket.server.io) {
@@ -32,7 +30,6 @@ const SocketHandler = (req: any, res: any) => {
     res.socket.server.io = io;
     io.on("connect", (socket) => {
       socket.on("disconnect", () => {
-        console.log(`Socket ${socket.id} disconnected`);
         removeUserSocket(socket.id);
         let lobby: Lobby | null = getUpdatedLobby(socket.id);
         if (lobby) {
@@ -46,12 +43,18 @@ const SocketHandler = (req: any, res: any) => {
           io.to(lobby.id).emit("update_lobby_res", lobby);
         }
       });
-      socket.on("toggle_ready", () => {
-        const updatedLobby = toggleReady(socket.id);
-        if (updatedLobby) {
-          io.to(updatedLobby.id).emit("update_lobby_res", updatedLobby);
+      socket.on(
+        "update_player",
+        (playerId: string, lobbyId: string, e: any) => {
+          const updatedLobby = updatePlayer(playerId, lobbyId, e);
+          console.log("updating lobby");
+          if (updatedLobby) {
+            console.log(updatedLobby);
+            io.to(lobbyId).emit("update_lobby_res");
+          }
         }
-      });
+      );
+
       socket.on("start_game", async (lobbyId: string) => {
         const updatedLobby = await startGame(lobbyId);
         if (updatedLobby) {

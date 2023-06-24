@@ -1,10 +1,16 @@
+import { Player } from "@/gameLogic";
 import React, { useState } from "react";
 
 const ReadyBox = ({ toggleReady }: { toggleReady: any }) => {
   return (
     <div>
       <label>
-        <input type="checkbox" onChange={toggleReady} />I am ready
+        <input
+          name="isReady"
+          type="checkbox"
+          onChange={(e) => toggleReady(e)}
+        />
+        I am ready
       </label>
     </div>
   );

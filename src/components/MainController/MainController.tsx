@@ -11,7 +11,6 @@ import { GameConfig, Lobby } from "@/gameLogic/lobby";
 import { LobbyView } from "../Lobby/Lobby";
 import ChatBox from "../Chat/Chat";
 import ChatInput from "../Chat/ChatInput";
-import { ConfigView } from "../Config/ConfigView";
 
 export const MainController = () => {
   const [socket, socketInitializer] = useSocket();
@@ -36,9 +35,10 @@ export const MainController = () => {
   const startGame = () => {
     lobby && socket?.emit("start_game", lobby.id);
   };
-  const toggleReady = () => {
-    socket?.emit("toggle_ready");
+  const updatePlayer = (e: any) => {
+    user && lobby && socket?.emit("update_player", user.id, lobby.id, e);
   };
+
   const signOut = () => {
     user && socket?.emit("remove_user", user.id);
     sessionStorage.removeItem("userId");
@@ -80,7 +80,7 @@ export const MainController = () => {
             onConfigChange={updateConfig}
             leaveLobby={leaveLobby}
             socketId={socket && socket.id}
-            toggleReady={toggleReady}
+            updatePlayer={updatePlayer}
             startGame={startGame}
           />
           <ChatBox messages={lobby.chat} />

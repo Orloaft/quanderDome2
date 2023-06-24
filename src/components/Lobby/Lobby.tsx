@@ -1,9 +1,9 @@
 import { Lobby } from "@/gameLogic/lobby";
-import { User } from "@/gameLogic/users";
 import { ConfigView } from "../Config/ConfigView";
 import ReadyBox from "./ReadyBox";
 import TriviaBox from "../Trivia/TriviaView";
 import PlayerView from "./PlayerView";
+import { Player } from "@/gameLogic";
 
 export const LobbyView = ({
   lobby,
@@ -11,11 +11,11 @@ export const LobbyView = ({
   userId,
   leaveLobby,
   socketId,
-  toggleReady,
+  updatePlayer,
   startGame,
 }: {
   lobby: Lobby;
-  toggleReady: () => void;
+  updatePlayer: (e: any) => void;
   onConfigChange: any;
   userId: string;
   leaveLobby: any;
@@ -30,11 +30,11 @@ export const LobbyView = ({
         onChange={onConfigChange}
         isHost={userId === lobby.hostId}
       />
-      {lobby.users.map((u: User) => {
+      {lobby.users.map((u: Player) => {
         return (
           <div key={u.id}>
             <p style={{ color: u.socketId ? "black" : "grey" }}>{u.name}</p>
-            <PlayerView player={u} />
+            <PlayerView player={u} updatePlayer={updatePlayer} />
             {u.isReady && <p>Ready!</p>}
             {userId === lobby.hostId && u.id !== userId && (
               <div
@@ -52,7 +52,7 @@ export const LobbyView = ({
       <button onClick={() => leaveLobby(userId, socketId)}>Leave lobby</button>
       {(userId === lobby.hostId && (
         <button onClick={startGame}>Start</button>
-      )) || <ReadyBox toggleReady={toggleReady} />}
+      )) || <ReadyBox toggleReady={updatePlayer} />}
     </div>
   );
 };
