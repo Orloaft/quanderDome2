@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import Image from "next/image";
 import Select from "react-select";
 import { Player } from "@/gameLogic";
+import ReadyBox from "./ReadyBox";
 
-const PlayerView = ({
+const PlayerView = memo(function PlayerView({
   player,
   updatePlayer,
 }: {
   player: Player;
   updatePlayer: (e: any) => void;
-}) => {
+}) {
   const avatarOptions = [
     {
       value: "/avatars/avatar1.jpg",
@@ -150,6 +151,7 @@ const PlayerView = ({
           src={player.avatar}
           alt="Selected Image"
         />
+        <ReadyBox toggleReady={updatePlayer} isReady={player.isReady} />
       </div>
     );
   } else {
@@ -161,9 +163,9 @@ const PlayerView = ({
           src={player.avatar}
           alt="Selected Image"
         />
+        {player.isReady && <p>Ready!</p>}
       </div>
     );
   }
-};
-
+});
 export default PlayerView;

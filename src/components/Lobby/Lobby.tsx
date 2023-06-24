@@ -4,6 +4,7 @@ import ReadyBox from "./ReadyBox";
 import TriviaBox from "../Trivia/TriviaView";
 import PlayerView from "./PlayerView";
 import { Player } from "@/gameLogic";
+import { Players } from "./Players";
 
 export const LobbyView = ({
   lobby,
@@ -30,29 +31,15 @@ export const LobbyView = ({
         onChange={onConfigChange}
         isHost={userId === lobby.hostId}
       />
-      {lobby.users.map((u: Player) => {
-        return (
-          <div key={u.id}>
-            <p style={{ color: u.socketId ? "black" : "grey" }}>{u.name}</p>
-            <PlayerView player={u} updatePlayer={updatePlayer} />
-            {u.isReady && <p>Ready!</p>}
-            {userId === lobby.hostId && u.id !== userId && (
-              <div
-                onClick={() => {
-                  leaveLobby(u.id, u.socketId);
-                }}
-              >
-                x
-              </div>
-            )}
-          </div>
-        );
-      })}
+      <Players
+        players={lobby.users}
+        hostId={lobby.hostId}
+        updatePlayer={updatePlayer}
+        leaveLobby={leaveLobby}
+      />
       {lobby.game && <TriviaBox question={lobby.game.currentQuestion} />}{" "}
       <button onClick={() => leaveLobby(userId, socketId)}>Leave lobby</button>
-      {(userId === lobby.hostId && (
-        <button onClick={startGame}>Start</button>
-      )) || <ReadyBox toggleReady={updatePlayer} />}
+      {userId === lobby.hostId && <button onClick={startGame}>Start</button>}
     </div>
   );
 };

@@ -68,10 +68,12 @@ export const MainController = () => {
   return (
     <UserContext.Provider value={{ user }}>
       {user && socket && !lobby ? (
-        <>
-          <DashBoard signOut={signOut} />
-          <LobbyList socket={socket} />
-        </>
+        !lobby && (
+          <>
+            <DashBoard signOut={signOut} />
+            <LobbyList socket={socket} />
+          </>
+        )
       ) : user && lobby ? (
         <>
           <LobbyView

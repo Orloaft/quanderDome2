@@ -5,6 +5,7 @@ export const tearDownSocketEvents = (socket: Socket) => {
   socket.off("add_user_res");
   socket.off("leave_lobby_res");
   socket.off("enter_lobby_res");
+  socket.off("update_lobby_res");
 };
 const handleSocketEvents = (
   socket: Socket,

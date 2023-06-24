@@ -1,8 +1,9 @@
 import { GameConfig, GameMode } from "@/gameLogic/lobby";
 import { CategorySelect } from "./CategorySelect";
 import { options } from "@/utils/categories";
+import { memo } from "react";
 
-export const ConfigView = ({
+export const ConfigView = memo(function ConfigView({
   config,
   onChange,
   isHost,
@@ -10,7 +11,7 @@ export const ConfigView = ({
   config: GameConfig;
   onChange: any;
   isHost: boolean;
-}) => {
+}) {
   const selectedCategory = options.find(
     (option) => option.id === +config.category
   );
@@ -20,6 +21,7 @@ export const ConfigView = ({
   ) => {
     const { name, value } = event.target;
     const newConfig = { ...config, [name]: value };
+
     onChange(newConfig);
   };
   if (isHost) {
@@ -94,4 +96,4 @@ export const ConfigView = ({
       </div>
     );
   }
-};
+});
