@@ -2,6 +2,7 @@ import { GameConfig, GameMode } from "@/gameLogic/lobby";
 import { CategorySelect } from "./CategorySelect";
 import { options } from "@/utils/categories";
 import { memo } from "react";
+import styles from "./styles.module.scss";
 
 export const ConfigView = memo(function ConfigView({
   config,
@@ -24,9 +25,10 @@ export const ConfigView = memo(function ConfigView({
 
     onChange(newConfig);
   };
+
   if (isHost) {
     return (
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div className={styles.configViewContainer}>
         <label>
           Mode:
           <select
@@ -73,7 +75,7 @@ export const ConfigView = memo(function ConfigView({
     );
   } else {
     return (
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <div className={styles.configViewContainer}>
         <label>
           Mode:
           <span>{config.mode}</span>

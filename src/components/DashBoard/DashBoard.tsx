@@ -1,12 +1,12 @@
 import { useUserContext } from "@/hooks/useUserContext";
+import styles from "./DashBoard.module.scss";
 
 export const DashBoard = ({ signOut }: { signOut: () => void }) => {
   const { user } = useUserContext();
   return (
-    <div>
-      <p>welcome {user?.name}</p>
-
-      <button onClick={signOut}>sign out</button>
+    <div className={styles.dashboardContainer}>
+      <p>Welcome {user?.name}</p>
+      <button onClick={signOut}>Sign Out</button>
     </div>
   );
 };

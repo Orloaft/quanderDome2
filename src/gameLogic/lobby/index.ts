@@ -137,7 +137,7 @@ const sendLobbyMessage = (
 const updatePlayer = (playerId: string, lobbyId: string, e: any) => {
   //make sure all input names match player prop names
   const { name, value } = e;
-  console.log(e);
+
   const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
   if (index !== -1) {
     const pIndex = lobbies[index].users.findIndex(

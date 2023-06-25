@@ -1,8 +1,9 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import Image from "next/image";
 import Select from "react-select";
 import { Player } from "@/gameLogic";
 import ReadyBox from "./ReadyBox";
+import styles from "./styles.module.scss";
 
 const PlayerView = memo(function PlayerView({
   player,
@@ -93,57 +94,133 @@ const PlayerView = memo(function PlayerView({
   const colorOptions = [
     {
       value: "red",
-      label: <div style={{ background: "red", height: "2rem" }}></div>,
+      label: (
+        <div style={{ background: "red", height: "2rem", width: "2rem" }}></div>
+      ),
     },
     {
       value: "blue",
-      label: <div style={{ background: "blue", height: "2rem" }}></div>,
+      label: (
+        <div
+          style={{ background: "blue", height: "2rem", width: "2rem" }}
+        ></div>
+      ),
     },
     {
       value: "green",
-      label: <div style={{ background: "green", height: "2rem" }}></div>,
+      label: (
+        <div
+          style={{ background: "green", height: "2rem", width: "2rem" }}
+        ></div>
+      ),
     },
     {
       value: "yellow",
-      label: <div style={{ background: "yellow", height: "2rem" }}></div>,
+      label: (
+        <div
+          style={{ background: "yellow", height: "2rem", width: "2rem" }}
+        ></div>
+      ),
     },
     {
       value: "orange",
-      label: <div style={{ background: "orange", height: "2rem" }}></div>,
+      label: (
+        <div
+          style={{ background: "orange", height: "2rem", width: "2rem" }}
+        ></div>
+      ),
     },
     {
       value: "purple",
-      label: <div style={{ background: "purple", height: "2rem" }}></div>,
+      label: (
+        <div
+          style={{ background: "purple", height: "2rem", width: "2rem" }}
+        ></div>
+      ),
     },
     {
       value: "pink",
-      label: <div style={{ background: "pink", height: "2rem" }}></div>,
+      label: (
+        <div
+          style={{ background: "pink", height: "2rem", width: "2rem" }}
+        ></div>
+      ),
     },
     {
       value: "black",
-      label: <div style={{ background: "black", height: "2rem" }}></div>,
+      label: (
+        <div
+          style={{ background: "black", height: "2rem", width: "2rem" }}
+        ></div>
+      ),
     },
   ];
-  const handleChange = (...args: any) => {
-    updatePlayer({ name: args[1].name, value: args[0].value });
+  const handleChange = (selectedOption: any, { name }: any) => {
+    updatePlayer({ name, value: selectedOption.value });
+  };
+  const customStyles = {
+    menuList: (base: any) => ({
+      ...base,
+
+      overflow: "-moz-scrollbars-none",
+      "::-webkit-scrollbar": {
+        display: "none",
+      },
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      display: "grid",
+      background: "transparent",
+      gridTemplateColumns: "repeat(1, 3fr)", // Adjust the number of columns as desired
+      gap: "10px", // Adjust the gap between options as desired
+    }),
+    option: (provided: any) => ({
+      ...provided,
+      textAlign: "center",
+    }),
+    control: (provided: any) => ({
+      ...provided,
+      border: "none",
+      boxShadow: "none",
+      backgroundColor: "transparent",
+      cursor: "pointer",
+    }),
+    dropdownIndicator: (provided: any) => ({
+      ...provided,
+      display: "none",
+    }),
+    indicatorSeparator: (provided: any) => ({
+      ...provided,
+      display: "none",
+    }),
   };
   if (sessionStorage.getItem("userId") === player.id) {
     return (
-      <div>
-        <Select
-          name="color"
-          options={colorOptions}
-          value={colorOptions.find((option) => option.value === player.color)}
-          onChange={handleChange}
-          placeholder="Select a color"
-        />
-        <Select
-          name="avatar"
-          options={avatarOptions}
-          value={avatarOptions.find((option) => option.value === player.avatar)}
-          onChange={handleChange}
-          placeholder="Select an image"
-        />
+      <div className={styles.playerViewContainer}>
+        <div className={styles.avatarSelect}>
+          <Select
+            name="color"
+            options={colorOptions}
+            styles={customStyles}
+            onChange={handleChange}
+            placeholder="Select a color"
+            className={styles["custom-select"]}
+            classNamePrefix="select"
+            isSearchable={false}
+            menuPlacement="auto"
+          />
+          <Select
+            name="avatar"
+            className={styles["custom-select"]}
+            options={avatarOptions}
+            styles={customStyles}
+            onChange={handleChange}
+            placeholder="Select an image"
+            classNamePrefix="select"
+            isSearchable={false}
+            menuPlacement="auto"
+          />
+        </div>
 
         <Image
           width={30}
@@ -151,12 +228,14 @@ const PlayerView = memo(function PlayerView({
           src={player.avatar}
           alt="Selected Image"
         />
-        <ReadyBox toggleReady={updatePlayer} isReady={player.isReady} />
+        <div className={styles.readyBox}>
+          <ReadyBox toggleReady={updatePlayer} isReady={player.isReady} />
+        </div>
       </div>
     );
   } else {
     return (
-      <div>
+      <div className={styles.playerViewContainer}>
         <Image
           width={30}
           height={30}
@@ -168,4 +247,27 @@ const PlayerView = memo(function PlayerView({
     );
   }
 });
+
+const CustomAvatarValue = ({ children }: any) => (
+  <div className="select__single-value">
+    {children}
+    <Image
+      width={60}
+      height={60}
+      src={children.props.src}
+      alt="Selected Image"
+    />
+  </div>
+);
+
+const CustomColorValue = ({ children }: any) => (
+  <div className="select__single-value">
+    <div
+      className="colorBlock"
+      style={{ background: children.props.style.background }}
+    ></div>
+    {children}
+  </div>
+);
+
 export default PlayerView;

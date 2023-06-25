@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import styles from "./styles.module.scss";
 
 export interface ChatMessage {
   userName: string;
@@ -19,20 +20,11 @@ const ChatBox: React.FC<ChatBoxProps> = ({ messages }) => {
   }, [messages]);
 
   return (
-    <div
-      style={{
-        width: "20rem",
-        height: "10rem",
-        overflowY: "auto",
-        border: "1px solid #ccc",
-        padding: "10px",
-      }}
-      ref={chatBoxRef}
-    >
+    <div className={styles.chatBoxContainer} ref={chatBoxRef}>
       {messages.map((msg, i) => (
-        <div key={i} style={{ wordWrap: "break-word", marginBottom: "5px" }}>
-          <strong>{msg.userName}: </strong>
-          {msg.message}
+        <div key={i} className={styles.messageContainer}>
+          <strong className={styles.userName}>{msg.userName}: </strong>
+          <span className={styles.message}>{msg.message}</span>
         </div>
       ))}
     </div>

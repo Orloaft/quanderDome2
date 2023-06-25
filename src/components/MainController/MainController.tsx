@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import SignInView from "../SignIn/SignIn";
 import useSocket from "@/hooks/useSocket";
-import { UserContext, useUserContext } from "@/hooks/useUserContext";
+import { UserContext } from "@/hooks/useUserContext";
 import handleSocketEvents, { tearDownSocketEvents } from "./socketHandlers";
 import { User } from "@/gameLogic/users";
 import { DashBoard } from "../DashBoard/DashBoard";
@@ -11,6 +11,7 @@ import { GameConfig, Lobby } from "@/gameLogic/lobby";
 import { LobbyView } from "../Lobby/Lobby";
 import ChatBox from "../Chat/Chat";
 import ChatInput from "../Chat/ChatInput";
+import styles from "./styles.module.scss";
 
 export const MainController = () => {
   const [socket, socketInitializer] = useSocket();
@@ -66,33 +67,35 @@ export const MainController = () => {
   }, [socket, handleSocketInitialization, user, data]);
 
   return (
-    <UserContext.Provider value={{ user }}>
-      {user && socket && !lobby ? (
-        !lobby && (
+    <div className={styles.mainControllerContainer}>
+      <UserContext.Provider value={{ user }}>
+        {user && socket && !lobby ? (
+          !lobby && (
+            <>
+              <DashBoard signOut={signOut} />
+              <LobbyList socket={socket} />
+            </>
+          )
+        ) : user && lobby ? (
           <>
-            <DashBoard signOut={signOut} />
-            <LobbyList socket={socket} />
+            <LobbyView
+              userId={user.id}
+              lobby={lobby}
+              onConfigChange={updateConfig}
+              leaveLobby={leaveLobby}
+              socketId={socket && socket.id}
+              updatePlayer={updatePlayer}
+              startGame={startGame}
+            />
+            <ChatBox messages={lobby.chat} />
+            <ChatInput onSendMessage={sendMessage} />
           </>
-        )
-      ) : user && lobby ? (
-        <>
-          <LobbyView
-            userId={user.id}
-            lobby={lobby}
-            onConfigChange={updateConfig}
-            leaveLobby={leaveLobby}
-            socketId={socket && socket.id}
-            updatePlayer={updatePlayer}
-            startGame={startGame}
-          />
-          <ChatBox messages={lobby.chat} />
-          <ChatInput onSendMessage={sendMessage} />
-        </>
-      ) : isConnected && !user ? (
-        <SignInView socket={socket} handleSubmit={signIn} />
-      ) : (
-        <p>Please wait...</p>
-      )}
-    </UserContext.Provider>
+        ) : isConnected && !user ? (
+          <SignInView socket={socket} handleSubmit={signIn} />
+        ) : (
+          <p>Please wait...</p>
+        )}
+      </UserContext.Provider>
+    </div>
   );
 };

@@ -1,10 +1,12 @@
-import { Lobby } from "@/gameLogic/lobby";
 import { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import handleSocketEvents, { tearDownSocketEvents } from "./socketHandlers";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { useUserContext } from "@/hooks/useUserContext";
 import Image from "next/image";
+import styles from "./styles.module.scss";
+import { Lobby } from "@/gameLogic/lobby";
+
 export const LobbyList = ({
   socket,
 }: {
@@ -41,9 +43,9 @@ export const LobbyList = ({
   const { lobbies, message } = data;
 
   return (
-    <div>
+    <div className={styles.lobbyListContainer}>
       <h2>Lobby List</h2>
-      <div>
+      <div className={styles.lobbyInput}>
         <input
           type="text"
           value={lobbyName}
@@ -51,7 +53,6 @@ export const LobbyList = ({
           placeholder="Enter lobby name"
         />
         <button onClick={createLobby}>Create Lobby</button>
-
         <Image
           onClick={() => {
             socket.emit("get_lobbies");
@@ -60,6 +61,7 @@ export const LobbyList = ({
           width={15}
           src="/refresh.svg"
           alt="Refresh"
+          className={styles.refreshIcon}
         />
         {message}
       </div>

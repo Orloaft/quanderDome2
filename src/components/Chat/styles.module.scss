@@ -1,0 +1,53 @@
+.chatBoxContainer {
+    width: 20rem;
+    height: 10rem;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #181818;
+    color: #fff;
+    border-radius: 4px;
+}
+
+.messageContainer {
+    word-wrap: break-word;
+    margin-bottom: 5px;
+}
+
+.userName {
+    color: #ffc600;
+}
+
+.message {
+    color: #f8f8f8;
+}
+.chatInputForm {
+    display: flex;
+    align-items: center;
+}
+
+.chatInputText {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: #181818;
+    color: #fff;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.chatInputButton {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #ffc600;
+    color: #181818;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: #f8c900;
+    }
+}

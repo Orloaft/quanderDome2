@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import styles from "./styles.module.scss";
 
-// SignIn component
 const SignInView = ({
   socket,
   handleSubmit,
@@ -15,15 +15,16 @@ const SignInView = ({
     setUsername(e.target.value);
     message && setMessage("");
   };
+
   useEffect(() => {
     socket.on("username_msg", (msg: string) => {
       setMessage(msg);
     });
   }, [socket]);
+
   return (
-    <div>
+    <div className={styles.signInContainer}>
       <form
-        style={{ display: "flex", flexDirection: "column" }}
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(username);
@@ -33,10 +34,10 @@ const SignInView = ({
           type="text"
           value={username}
           onChange={handleInputChange}
-          placeholder="user name"
+          placeholder="User name"
         />
         <button>Sign in</button>
-        {message}
+        {message && <p className={styles.message}>{message}</p>}
       </form>
     </div>
   );

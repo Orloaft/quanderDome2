@@ -1,0 +1,134 @@
+.select {
+  /* Hide the scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* Firefox */
+  overflow: -moz-scrollbars-none;
+
+  &::-webkit-scrollbar {
+    /* Hide the scrollbar in Webkit-based browsers */
+    display: none;
+  }
+}
+.playerViewContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  font-size: 14px;
+
+  .avatarSelect {
+    // margin-bottom: 10px;
+    // width: 180px;
+
+    // .select__control {
+    //   background-color: #181818;
+    //   border: none;
+    //   border-radius: 4px;
+    // }
+
+    // .select__single-value {
+    //   display: flex;
+    //   align-items: center;
+    //   height: 60px;
+
+    //   color: #fff;
+    // }
+
+    // .select__option {
+    //   display: flex;
+    //   align-items: center;
+    // }
+  }
+
+  .colorSelect {
+    // width: 100px;
+
+    // .select__control {
+    //   background-color: #181818;
+    //   border: none;
+    //   border-radius: 4px;
+    //   padding: 5px;
+    // }
+
+    // .select__single-value {
+    //   display: flex;
+    //   align-items: center;
+    //   height: 2rem;
+    // }
+
+    // .select__option {
+    //   display: flex;
+    //   align-items: center;
+    // }
+
+    // .colorBlock {
+    //   width: 2rem;
+    //   height: 2rem;
+    //   border-radius: 4px;
+    // }
+  }
+
+  .readyBox {
+    margin-top: 10px;
+  }
+}
+.lobbyViewContainer {
+  display: flex;
+  // flex-direction: column;
+  align-items: center;
+  color: #fff;
+  font-size: 14px;
+  gap: 2rem;
+
+  p {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .configView {
+    margin-bottom: 10px;
+  }
+
+  .playersContainer {
+    margin-bottom: 10px;
+  }
+
+  .triviaBox {
+    margin-bottom: 10px;
+  }
+
+  .leaveButton,
+  .startButton {
+    background-color: #ff2e63;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #e2184a;
+    }
+  }
+
+  .startButton {
+    margin-top: 10px;
+  }
+}
+.custom-select {
+  /* Hide the scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /* Firefox */
+  overflow: -moz-scrollbars-none;
+}
+
+.custom-select::-webkit-scrollbar {
+  /* Hide the scrollbar in Webkit-based browsers */
+  display: none;
+}
