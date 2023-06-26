@@ -4,12 +4,13 @@ import Select from "react-select";
 import { Player } from "@/gameLogic";
 import ReadyBox from "./ReadyBox";
 import styles from "./styles.module.scss";
+import { User } from "@/gameLogic/users";
 
 const PlayerView = memo(function PlayerView({
   player,
   updatePlayer,
 }: {
-  player: Player;
+  player: User;
   updatePlayer: (e: any) => void;
 }) {
   const avatarOptions = [
@@ -17,8 +18,8 @@ const PlayerView = memo(function PlayerView({
       value: "/avatars/avatar1.jpg",
       label: (
         <Image
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           src={player.avatar}
           alt="Selected Image"
         />
@@ -28,8 +29,8 @@ const PlayerView = memo(function PlayerView({
       value: "/avatars/avatar2.jpg",
       label: (
         <Image
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           src="/avatars/avatar2.jpg"
           alt="Selected Image"
         />
@@ -39,8 +40,8 @@ const PlayerView = memo(function PlayerView({
       value: "/avatars/avatar3.jpg",
       label: (
         <Image
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           src="/avatars/avatar3.jpg"
           alt="Selected Image"
         />
@@ -50,8 +51,8 @@ const PlayerView = memo(function PlayerView({
       value: "/avatars/avatar4.jpg",
       label: (
         <Image
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           src="/avatars/avatar4.jpg"
           alt="Selected Image"
         />
@@ -61,8 +62,8 @@ const PlayerView = memo(function PlayerView({
       value: "/avatars/avatar5.jpg",
       label: (
         <Image
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           src="/avatars/avatar5.jpg"
           alt="Selected Image"
         />
@@ -72,8 +73,8 @@ const PlayerView = memo(function PlayerView({
       value: "/avatars/avatar6.jpg",
       label: (
         <Image
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           src="/avatars/avatar6.jpg"
           alt="Selected Image"
         />
@@ -83,8 +84,8 @@ const PlayerView = memo(function PlayerView({
       value: "/avatars/avatar7.jpg",
       label: (
         <Image
-          width={60}
-          height={60}
+          width={100}
+          height={100}
           src="/avatars/avatar7.jpg"
           alt="Selected Image"
         />
@@ -95,14 +96,26 @@ const PlayerView = memo(function PlayerView({
     {
       value: "red",
       label: (
-        <div style={{ background: "red", height: "2rem", width: "2rem" }}></div>
+        <div
+          style={{
+            background: "red",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
+        ></div>
       ),
     },
     {
       value: "blue",
       label: (
         <div
-          style={{ background: "blue", height: "2rem", width: "2rem" }}
+          style={{
+            background: "blue",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
         ></div>
       ),
     },
@@ -110,7 +123,12 @@ const PlayerView = memo(function PlayerView({
       value: "green",
       label: (
         <div
-          style={{ background: "green", height: "2rem", width: "2rem" }}
+          style={{
+            background: "green",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
         ></div>
       ),
     },
@@ -118,7 +136,12 @@ const PlayerView = memo(function PlayerView({
       value: "yellow",
       label: (
         <div
-          style={{ background: "yellow", height: "2rem", width: "2rem" }}
+          style={{
+            background: "yellow",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
         ></div>
       ),
     },
@@ -126,7 +149,12 @@ const PlayerView = memo(function PlayerView({
       value: "orange",
       label: (
         <div
-          style={{ background: "orange", height: "2rem", width: "2rem" }}
+          style={{
+            background: "orange",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
         ></div>
       ),
     },
@@ -134,7 +162,12 @@ const PlayerView = memo(function PlayerView({
       value: "purple",
       label: (
         <div
-          style={{ background: "purple", height: "2rem", width: "2rem" }}
+          style={{
+            background: "purple",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
         ></div>
       ),
     },
@@ -142,15 +175,25 @@ const PlayerView = memo(function PlayerView({
       value: "pink",
       label: (
         <div
-          style={{ background: "pink", height: "2rem", width: "2rem" }}
+          style={{
+            background: "pink",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
         ></div>
       ),
     },
     {
-      value: "black",
+      value: "white",
       label: (
         <div
-          style={{ background: "black", height: "2rem", width: "2rem" }}
+          style={{
+            background: "white",
+            height: "2rem",
+            width: "2rem",
+            borderRadius: "4px",
+          }}
         ></div>
       ),
     },
@@ -167,8 +210,14 @@ const PlayerView = memo(function PlayerView({
         display: "none",
       },
     }),
+    valueContainer: (base: any) => ({
+      ...base,
+      padding: 0,
+      justifyContent: "center",
+    }),
     menu: (provided: any) => ({
       ...provided,
+
       display: "grid",
       background: "transparent",
       gridTemplateColumns: "repeat(1, 3fr)", // Adjust the number of columns as desired
@@ -194,66 +243,69 @@ const PlayerView = memo(function PlayerView({
       display: "none",
     }),
   };
-  if (sessionStorage.getItem("userId") === player.id) {
-    return (
-      <div className={styles.playerViewContainer}>
-        <div className={styles.avatarSelect}>
-          <Select
-            name="color"
-            options={colorOptions}
-            styles={customStyles}
-            onChange={handleChange}
-            placeholder="Select a color"
-            className={styles["custom-select"]}
-            classNamePrefix="select"
-            isSearchable={false}
-            menuPlacement="auto"
-          />
+
+  return (
+    <div className={styles.playerViewContainer}>
+      <div className={styles.avatarSelect}>
+        <Select
+          name="color"
+          options={colorOptions}
+          styles={customStyles}
+          onChange={handleChange}
+          placeholder={
+            <div
+              style={{
+                background: "white",
+                height: "2rem",
+                width: "2rem",
+                borderRadius: "4px",
+              }}
+            ></div>
+          }
+          className={styles["custom-select"]}
+          classNamePrefix="select"
+          isSearchable={false}
+          menuPlacement="auto"
+        />
+        <div
+          style={{
+            border: `8px solid ${player.color}`,
+            padding: 0,
+            borderRadius: "4px",
+          }}
+        >
           <Select
             name="avatar"
             className={styles["custom-select"]}
             options={avatarOptions}
             styles={customStyles}
             onChange={handleChange}
-            placeholder="Select an image"
+            placeholder={
+              <Image
+                width={100}
+                height={100}
+                src={player.avatar}
+                alt="Selected Image"
+              />
+            }
             classNamePrefix="select"
             isSearchable={false}
             menuPlacement="auto"
           />
         </div>
 
-        <Image
-          width={30}
-          height={30}
-          src={player.avatar}
-          alt="Selected Image"
-        />
-        <div className={styles.readyBox}>
-          <ReadyBox toggleReady={updatePlayer} isReady={player.isReady} />
-        </div>
+        <p style={{ color: player.color, fontSize: "3rem" }}>{player.name}</p>
       </div>
-    );
-  } else {
-    return (
-      <div className={styles.playerViewContainer}>
-        <Image
-          width={30}
-          height={30}
-          src={player.avatar}
-          alt="Selected Image"
-        />
-        {player.isReady && <p>Ready!</p>}
-      </div>
-    );
-  }
+    </div>
+  );
 });
 
 const CustomAvatarValue = ({ children }: any) => (
   <div className="select__single-value">
     {children}
     <Image
-      width={60}
-      height={60}
+      width={100}
+      height={100}
       src={children.props.src}
       alt="Selected Image"
     />

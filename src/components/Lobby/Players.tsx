@@ -2,6 +2,7 @@ import { Player } from "@/gameLogic";
 import { memo } from "react";
 import PlayerView from "./PlayerView";
 import { useUserContext } from "@/hooks/useUserContext";
+import { PlayerCard } from "./PlayerCard";
 
 export const Players = memo(function Players({
   players,
@@ -19,7 +20,7 @@ export const Players = memo(function Players({
     return (
       <div key={u.id}>
         <p style={{ color: u.socketId ? u.color : "grey" }}>{u.name}</p>
-        <PlayerView player={u} updatePlayer={updatePlayer} />
+        <PlayerCard player={u} updatePlayer={updatePlayer} />
 
         {user.id === hostId && u.id !== user.id && (
           <div

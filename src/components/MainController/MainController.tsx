@@ -37,7 +37,11 @@ export const MainController = () => {
     lobby && socket?.emit("start_game", lobby.id);
   };
   const updatePlayer = (e: any) => {
-    user && lobby && socket?.emit("update_player", user.id, lobby.id, e);
+    if (lobby) {
+      user && socket?.emit("update_player", user.id, lobby.id, e);
+    } else {
+      user && socket?.emit("update_user", user.id, e);
+    }
   };
 
   const signOut = () => {
@@ -72,7 +76,7 @@ export const MainController = () => {
         {user && socket && !lobby ? (
           !lobby && (
             <>
-              <DashBoard signOut={signOut} />
+              <DashBoard signOut={signOut} updatePlayer={updatePlayer} />
               <LobbyList socket={socket} />
             </>
           )

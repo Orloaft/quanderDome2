@@ -27,6 +27,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         value={message}
         onChange={handleChange}
         className={styles.chatInputText}
+        placeholder="type message..."
       />
       <button type="submit" className={styles.chatInputButton}>
         Send

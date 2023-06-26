@@ -38,16 +38,16 @@
 }
 
 .chatInputButton {
-    padding: 8px 16px;
+    background-color: #5b0e2d;
+    color: #fff;
     border: none;
     border-radius: 4px;
-    background-color: #ffc600;
-    color: #181818;
+    padding: 8px 16px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: #f8c900;
+        background-color: #e2184a;
     }
 }

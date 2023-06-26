@@ -17,6 +17,7 @@ import {
   removeUser,
   removeUserSocket,
   updateSocket,
+  updateUser,
 } from "@/gameLogic/users";
 import { verifyLobby, verifyUsername } from "@/utils/verify";
 import { Server } from "Socket.IO";
@@ -52,7 +53,13 @@ const SocketHandler = (req: any, res: any) => {
           }
         }
       );
+      socket.on("update_user", (playerId: string, e: any) => {
+        const user = updateUser(playerId, e);
 
+        if (user) {
+          io.to(socket.id).emit("add_user_res", user);
+        }
+      });
       socket.on("start_game", async (lobbyId: string) => {
         const updatedLobby = await startGame(lobbyId);
         if (updatedLobby) {

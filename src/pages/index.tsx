@@ -7,12 +7,12 @@ export default function Home() {
   return (
     <div className={styles.homeContainer}>
       <Head>
-        <title>QuanderDome</title>
+        <title>QuanderDome II</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className={styles.title}>QuanderDome</h1>
+      <h1 className={styles.title}>QuanderDome II</h1>
       <MainController />
     </div>
   );

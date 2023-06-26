@@ -115,7 +115,7 @@ const joinLobby = (user: User, id: string) => {
         avatar: "/avatars/avatar1.jpg",
         life: 0,
         points: 0,
-        color: "black",
+        color: "white",
       });
     }
   } else {
@@ -166,10 +166,8 @@ const createLobby = (host: User, name: string) => {
     users: [
       {
         ...host,
-        avatar: "/avatars/avatar1.jpg",
         life: 0,
         points: 0,
-        color: "black",
       },
     ],
     config: config,

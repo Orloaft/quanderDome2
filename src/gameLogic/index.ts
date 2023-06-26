@@ -10,8 +10,6 @@ export interface GameData {
 export interface Player extends User {
   points: number;
   life: number;
-  color: string;
-  avatar: string;
 }
 const startGame = async (lobbyId: string): Promise<Lobby | undefined> => {
   let newLobby = lobbies.find((lobby: Lobby) => lobby.id === lobbyId);
