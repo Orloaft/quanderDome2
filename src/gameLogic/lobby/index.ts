@@ -112,10 +112,9 @@ const joinLobby = (user: User, id: string) => {
     } else {
       lobbies[index].users.push({
         ...user,
-        avatar: "/avatars/avatar1.jpg",
+
         life: 0,
         points: 0,
-        color: "white",
       });
     }
   } else {

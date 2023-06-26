@@ -204,11 +204,11 @@ const PlayerView = memo(function PlayerView({
   const customStyles = {
     menuList: (base: any) => ({
       ...base,
-
-      overflow: "-moz-scrollbars-none",
-      "::-webkit-scrollbar": {
-        display: "none",
-      },
+      width: "fit-content",
+      //   overflow: "-moz-scrollbars-none",
+      //   "::-webkit-scrollbar": {
+      //     display: "none",
+      //   },
     }),
     valueContainer: (base: any) => ({
       ...base,
@@ -217,15 +217,16 @@ const PlayerView = memo(function PlayerView({
     }),
     menu: (provided: any) => ({
       ...provided,
-
-      display: "grid",
+      width: "auto", // Set the width to 100% to expand across the screen
+      maxWidth: "none", // Disable the maximum width limit
       background: "transparent",
-      gridTemplateColumns: "repeat(1, 3fr)", // Adjust the number of columns as desired
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", // Adjust the column width and responsiveness as needed
       gap: "10px", // Adjust the gap between options as desired
     }),
     option: (provided: any) => ({
       ...provided,
-      textAlign: "center",
+      width: "auto",
     }),
     control: (provided: any) => ({
       ...provided,
