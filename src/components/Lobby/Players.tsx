@@ -24,6 +24,7 @@ export const Players = memo(function Players({
 
         {user.id === hostId && u.id !== user.id && (
           <div
+            style={{ cursor: "default" }}
             onClick={() => {
               leaveLobby(u.id, u.socketId);
             }}

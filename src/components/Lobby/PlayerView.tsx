@@ -246,7 +246,8 @@ const PlayerView = memo(function PlayerView({
   };
 
   return (
-    <div className={styles.playerViewContainer}>
+    <div className={`frame ${styles.playerViewContainer}`}>
+      <p style={{ color: "#ffa281", fontSize: "3rem" }}>{player.name}</p>
       <div className={styles.avatarSelect}>
         <Select
           name="color"
@@ -294,8 +295,6 @@ const PlayerView = memo(function PlayerView({
             menuPlacement="auto"
           />
         </div>
-
-        <p style={{ color: player.color, fontSize: "3rem" }}>{player.name}</p>
       </div>
     </div>
   );

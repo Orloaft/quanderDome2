@@ -12,6 +12,10 @@ import { LobbyView } from "../Lobby/Lobby";
 import ChatBox from "../Chat/Chat";
 import ChatInput from "../Chat/ChatInput";
 import styles from "./styles.module.scss";
+import TriviaBox from "../Trivia/TriviaView";
+import { GameView } from "../GameView/GameView";
+import { Scores } from "../GameView/Scores";
+import { ScoreBoard } from "../GameView/ScoreBoard";
 
 export const MainController = () => {
   const [socket, socketInitializer] = useSocket();
@@ -35,6 +39,10 @@ export const MainController = () => {
   };
   const startGame = () => {
     lobby && socket?.emit("start_game", lobby.id);
+  };
+  const submitAnswer = (answer: string) => {
+    console.log("submitting answer");
+    lobby && user && socket?.emit("submit_answer", lobby.id, user.id, answer);
   };
   const updatePlayer = (e: any) => {
     if (lobby) {
@@ -81,19 +89,58 @@ export const MainController = () => {
             </>
           )
         ) : user && lobby ? (
-          <>
-            <LobbyView
-              userId={user.id}
-              lobby={lobby}
-              onConfigChange={updateConfig}
-              leaveLobby={leaveLobby}
-              socketId={socket && socket.id}
-              updatePlayer={updatePlayer}
-              startGame={startGame}
-            />
-            <ChatBox messages={lobby.chat} />
-            <ChatInput onSendMessage={sendMessage} />
-          </>
+          (!lobby.game && (
+            <div style={{ display: "flex", width: "100%", maxHeight: "20rem" }}>
+              <LobbyView
+                userId={user.id}
+                lobby={lobby}
+                onConfigChange={updateConfig}
+                leaveLobby={leaveLobby}
+                socketId={socket && socket.id}
+                updatePlayer={updatePlayer}
+                startGame={startGame}
+              />
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
+              >
+                <ChatBox messages={lobby.chat} />
+                <ChatInput onSendMessage={sendMessage} />
+              </div>
+            </div>
+          )) ||
+          (lobby.game && (
+            <>
+              <div
+                style={{ display: "flex", width: "100%", maxHeight: "20rem" }}
+              >
+                {(lobby.game.isConcluded && (
+                  <ScoreBoard players={lobby.users} />
+                )) || (
+                  <>
+                    <GameView game={lobby.game} submitAnswer={submitAnswer} />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                      }}
+                    >
+                      <div style={{ height: "100%" }}>
+                        <ChatBox messages={lobby.chat} />
+                        <ChatInput onSendMessage={sendMessage} />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <Scores players={lobby.users} />
+            </>
+          ))
         ) : isConnected && !user ? (
           <SignInView socket={socket} handleSubmit={signIn} />
         ) : (

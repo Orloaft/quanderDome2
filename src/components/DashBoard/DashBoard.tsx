@@ -12,10 +12,10 @@ export const DashBoard = ({
   const { user } = useUserContext();
   return (
     user && (
-      <div className={styles.dashboardContainer}>
-        <PlayerView player={user} updatePlayer={updatePlayer} />
-
-        <button onClick={signOut}>Sign Out</button>
+      <div>
+        <div className={styles.dashboardContainer}>
+          <PlayerView player={user} updatePlayer={updatePlayer} />
+        </div>
       </div>
     )
   );

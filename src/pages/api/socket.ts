@@ -1,4 +1,4 @@
-import { Player, startGame } from "@/gameLogic";
+import { Player, startGame, submitAnswer } from "@/gameLogic";
 import {
   GameConfig,
   Lobby,
@@ -53,6 +53,17 @@ const SocketHandler = (req: any, res: any) => {
           }
         }
       );
+      socket.on(
+        "submit_answer",
+        (lobbyId: string, playerId: string, answer: string) => {
+          const updatedLobby = submitAnswer(lobbyId, playerId, answer);
+          if (updatedLobby) {
+            const user = updatedLobby.users.find((u) => u.id === playerId);
+            user && io.to(user.socketId).emit("add_user_res", user);
+            io.to(lobbyId).emit("update_lobby_res", updatedLobby);
+          }
+        }
+      );
       socket.on("update_user", (playerId: string, e: any) => {
         const user = updateUser(playerId, e);
 
@@ -61,8 +72,13 @@ const SocketHandler = (req: any, res: any) => {
         }
       });
       socket.on("start_game", async (lobbyId: string) => {
-        const updatedLobby = await startGame(lobbyId);
+        const updatedLobby = await startGame(lobbyId, io);
+
         if (updatedLobby) {
+          updatedLobby.users.forEach((user) => {
+            user && io.to(user.socketId).emit("add_user_res", user);
+          });
+
           io.to(lobbyId).emit("update_lobby_res", updatedLobby);
         }
       });

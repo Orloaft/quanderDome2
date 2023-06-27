@@ -1,0 +1,17 @@
+.optionContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.option {
+    width: 50%;
+    cursor: pointer;
+    &:hover {
+        color: white;
+    }
+}
+.selected {
+    background-color: black;
+}
+.question {
+}

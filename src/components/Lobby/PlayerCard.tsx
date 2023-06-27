@@ -11,7 +11,7 @@ export const PlayerCard = ({
   updatePlayer: (e: any) => void;
 }) => {
   const user = useUserContext().user;
-  console.log(player);
+
   return (
     <>
       {" "}

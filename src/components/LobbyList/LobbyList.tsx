@@ -43,7 +43,7 @@ export const LobbyList = ({
   const { lobbies, message } = data;
 
   return (
-    <div className={styles.lobbyListContainer}>
+    <div className={`frame ${styles.lobbyListContainer}`}>
       <h2>Lobby List</h2>
       <div className={styles.lobbyInput}>
         <input
@@ -57,8 +57,8 @@ export const LobbyList = ({
           onClick={() => {
             socket.emit("get_lobbies");
           }}
-          height={15}
-          width={15}
+          height={25}
+          width={25}
           src="/refresh.svg"
           alt="Refresh"
           className={styles.refreshIcon}
@@ -73,7 +73,7 @@ export const LobbyList = ({
               joinLobby(lobby.id);
             }}
           >
-            {lobby.name}
+            {lobby.name} {lobby.users.length}/8
           </li>
         ))}
       </ul>

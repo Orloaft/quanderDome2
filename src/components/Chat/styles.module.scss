@@ -1,7 +1,8 @@
 .chatBoxContainer {
     width: 20rem;
-    height: 10rem;
-    overflow-y: auto;
+    height: 20rem;
+    max-height: 20rem;
+    overflow-y: scroll;
     border: 1px solid #ccc;
     padding: 10px;
     background-color: #181818;
@@ -35,19 +36,4 @@
     color: #fff;
     font-size: 14px;
     margin-right: 8px;
-}
-
-.chatInputButton {
-    background-color: #5b0e2d;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-        background-color: #e2184a;
-    }
 }

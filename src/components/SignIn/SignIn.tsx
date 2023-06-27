@@ -25,6 +25,7 @@ const SignInView = ({
   return (
     <div className={styles.signInContainer}>
       <form
+        className="frame"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(username);

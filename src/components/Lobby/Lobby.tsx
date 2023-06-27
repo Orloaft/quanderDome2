@@ -22,7 +22,7 @@ export const LobbyView = ({
   startGame: () => void;
 }) => {
   return (
-    <div className={styles.lobbyViewContainer}>
+    <div className={`frame ${styles.lobbyViewContainer}`}>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <p style={{ fontSize: "3rem" }}>
           <b>{lobby.name}</b>
@@ -43,11 +43,7 @@ export const LobbyView = ({
           leaveLobby={leaveLobby}
         />
       </div>
-      {lobby.game && (
-        <div className={styles.triviaBox}>
-          <TriviaBox question={lobby.game.currentQuestion} />
-        </div>
-      )}
+
       <div style={{ display: "flex", flexDirection: "column" }}>
         <button
           className={styles.leaveButton}

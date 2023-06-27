@@ -112,7 +112,7 @@ const joinLobby = (user: User, id: string) => {
     } else {
       lobbies[index].users.push({
         ...user,
-
+        choices: [],
         life: 0,
         points: 0,
       });
@@ -165,6 +165,7 @@ const createLobby = (host: User, name: string) => {
     users: [
       {
         ...host,
+        choices: [],
         life: 0,
         points: 0,
       },

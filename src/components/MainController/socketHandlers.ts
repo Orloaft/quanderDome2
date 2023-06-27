@@ -1,3 +1,4 @@
+import { Player } from "@/gameLogic";
 import { Lobby } from "@/gameLogic/lobby";
 import { User } from "@/gameLogic/users";
 import { Socket } from "socket.io-client";
@@ -12,7 +13,7 @@ const handleSocketEvents = (
   setData: React.Dispatch<React.SetStateAction<any>>,
   data: any
 ): void => {
-  socket.on("add_user_res", (user: User) => {
+  socket.on("add_user_res", (user: User | Player) => {
     sessionStorage.setItem("userId", user.id);
     setData({ ...data, user: user });
   });

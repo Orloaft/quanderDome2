@@ -7,11 +7,18 @@
 
 html {
   font-family: monospace;
-  background: url("../../public/diamond-sunset.svg");
-  background-repeat: no-repeat;
+  background: url("../../public/large-triangles(1).svg");
+  height: 100%;
+  width: 100%;
   background-position: center;
-  background-size: contain;
+  background-size: 25%;
 
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 img{
   border-radius: 4px;
@@ -23,4 +30,25 @@ img{
   100% {
     background-position: bottom;
   }
+}
+.frame {
+  background-color: #5b0e2d;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border: 2px solid #ffa781;
+  color: #ffa781;
+}
+button {
+  padding: 8px 16px;
+  background-color: #5b0e2d;
+  color: #ffa781;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+ 
+}
+button:hover {
+  background-color: #ffa781;
+  color: #5b0e2d;
 }
