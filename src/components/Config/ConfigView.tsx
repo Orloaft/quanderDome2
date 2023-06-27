@@ -50,6 +50,7 @@ export const ConfigView = memo(function ConfigView({
             type="number"
             name="questions"
             defaultValue={config.questions}
+            max={30}
             onChange={handleInputChange}
           />
         </label>

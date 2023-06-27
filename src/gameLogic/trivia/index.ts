@@ -1,10 +1,9 @@
 import axios from "axios";
-
+import he from "he";
 export interface TriviaQuestion {
   category: string;
   question: string;
   correctAnswer: string;
-  countdown: number;
   answers: string[];
 }
 interface OpenTriviaDBQuestion {
@@ -15,7 +14,9 @@ interface OpenTriviaDBQuestion {
   correct_answer: string;
   incorrect_answers: string[];
 }
-
+const nsc = (str: string) => {
+  return he.decode(str);
+};
 const fetchTriviaQuestions = async (
   amount: number,
   category: number
@@ -29,14 +30,13 @@ const fetchTriviaQuestions = async (
 
     const triviaQuestions: TriviaQuestion[] = data.map(
       (questionData: OpenTriviaDBQuestion) => ({
-        category: questionData.category,
-        question: questionData.question,
-        correctAnswer: questionData.correct_answer,
+        category: nsc(questionData.category),
+        question: nsc(questionData.question),
+        correctAnswer: nsc(questionData.correct_answer),
         answers: [
-          ...questionData.incorrect_answers,
-          questionData.correct_answer,
+          ...questionData.incorrect_answers.map((a) => nsc(a)),
+          nsc(questionData.correct_answer),
         ].sort(() => Math.random() - 0.5),
-        countdown: 3,
       })
     );
 

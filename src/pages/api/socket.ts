@@ -20,7 +20,7 @@ import {
   updateUser,
 } from "@/gameLogic/users";
 import { verifyLobby, verifyUsername } from "@/utils/verify";
-import { Server } from "Socket.IO";
+import { Server } from "Socket.io";
 
 const SocketHandler = (req: any, res: any) => {
   if (res.socket.server.io) {

@@ -156,7 +156,7 @@ const createLobby = (host: User, name: string) => {
     mode: GameMode.NORMAL,
     questions: 15,
     category: 0,
-    time: 60,
+    time: 20,
   };
   const lobby: Lobby = {
     name: name,
