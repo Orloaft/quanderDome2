@@ -1,4 +1,3 @@
-import { Player } from "@/gameLogic";
 import React, { useState } from "react";
 
 const ReadyBox = ({
@@ -19,7 +18,7 @@ const ReadyBox = ({
             toggleReady({ name: "isReady", value: e.target.checked });
           }}
         />
-        I am ready
+        Ready
       </label>
     </div>
   );

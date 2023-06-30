@@ -1,4 +1,4 @@
-import { GameConfig, GameMode } from "@/gameLogic/lobby";
+import { GameConfig, GameMode, updateConfig } from "@/gameLogic/lobby";
 import { CategorySelect } from "./CategorySelect";
 import { options } from "@/utils/categories";
 import { memo } from "react";
@@ -18,10 +18,14 @@ export const ConfigView = memo(function ConfigView({
   );
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | any>
   ) => {
-    const { name, value } = event.target;
-    const newConfig = { ...config, [name]: value };
+    const { name, value, checked } = event.target;
+
+    const newConfig = {
+      ...config,
+      [name]: checked !== undefined ? checked : value,
+    };
 
     onChange(newConfig);
   };
@@ -42,6 +46,17 @@ export const ConfigView = memo(function ConfigView({
               </option>
             ))}
           </select>
+          <label>
+            <span>Teams:</span>
+            <input
+              name="teams"
+              onChange={(e) => {
+                handleInputChange(e);
+              }}
+              type="checkbox"
+              checked={config.teams}
+            ></input>
+          </label>
         </label>
 
         <label>
@@ -64,7 +79,7 @@ export const ConfigView = memo(function ConfigView({
         </label>
 
         <label>
-          Time:
+          Round-Time:
           <input
             type="number"
             name="time"
@@ -80,6 +95,10 @@ export const ConfigView = memo(function ConfigView({
         <label>
           Mode:
           <span>{config.mode}</span>
+          <label>
+            <span>Teams:</span>
+            {config.teams ? "Yes" : "No"}
+          </label>
         </label>
 
         <label>

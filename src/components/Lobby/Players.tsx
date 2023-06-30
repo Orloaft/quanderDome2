@@ -1,6 +1,5 @@
 import { Player } from "@/gameLogic";
 import { memo } from "react";
-import PlayerView from "./PlayerView";
 import { useUserContext } from "@/hooks/useUserContext";
 import { PlayerCard } from "./PlayerCard";
 
@@ -16,23 +15,27 @@ export const Players = memo(function Players({
   leaveLobby: (userId: string, socketId: string) => void;
 }) {
   let user = useUserContext().user as Player;
-  return players.map((u: Player) => {
-    return (
-      <div key={u.id}>
-        <p style={{ color: u.socketId ? u.color : "grey" }}>{u.name}</p>
-        <PlayerCard player={u} updatePlayer={updatePlayer} />
+  return (
+    <div style={{ display: "flex", gap: "1rem" }}>
+      {players.map((u: Player) => {
+        return (
+          <div key={u.id}>
+            <p style={{ color: u.socketId ? u.color : "grey" }}>{u.name}</p>
+            <PlayerCard player={u} updatePlayer={updatePlayer} />
 
-        {user.id === hostId && u.id !== user.id && (
-          <div
-            style={{ cursor: "default" }}
-            onClick={() => {
-              leaveLobby(u.id, u.socketId);
-            }}
-          >
-            x
+            {user.id === hostId && u.id !== user.id && (
+              <div
+                style={{ cursor: "default" }}
+                onClick={() => {
+                  leaveLobby(u.id, u.socketId);
+                }}
+              >
+                x
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    );
-  });
+        );
+      })}
+    </div>
+  );
 });

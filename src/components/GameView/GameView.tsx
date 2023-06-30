@@ -17,7 +17,7 @@ export const GameView = ({
       )}
 
       <TriviaBox
-        style={{ opacity: `${game.countDown ? `0` : `1`}` }}
+        style={{ width: "30rem", opacity: `${game.countDown ? `0` : `1`}` }}
         question={game.currentQuestion}
         submitAnswer={submitAnswer}
       />

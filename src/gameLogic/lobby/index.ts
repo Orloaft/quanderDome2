@@ -3,10 +3,9 @@ import { GameData, Player } from "..";
 import { User, updateSocket } from "../users";
 import { v4 as uuidv4 } from "uuid";
 export enum GameMode {
-  NORMAL = "NORMAL",
-  SUDDEN_DEATH = "SUDDEN_DEATH",
-  MARATHON = "MARATHON",
-  TEAMS = "TEAMS",
+  NORMAL = "Normal mode",
+  SUDDEN_DEATH = "Death match",
+  MARATHON = "Marathon mode",
 }
 
 export interface Lobby {
@@ -23,6 +22,7 @@ export interface GameConfig {
   questions: number;
   category: number;
   time: number;
+  teams: boolean;
 }
 const lobbies: Lobby[] = [];
 const generateUniqueId = (): string => {
@@ -157,6 +157,7 @@ const createLobby = (host: User, name: string) => {
     questions: 15,
     category: 0,
     time: 20,
+    teams: false,
   };
   const lobby: Lobby = {
     name: name,

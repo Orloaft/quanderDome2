@@ -247,7 +247,7 @@ const PlayerView = memo(function PlayerView({
 
   return (
     <div className={`frame ${styles.playerViewContainer}`}>
-      <p style={{ color: "#ffa281", fontSize: "3rem" }}>{player.name}</p>
+      <p style={{ color: "#fbeaeb", fontSize: "3rem" }}>{player.name}</p>
       <div className={styles.avatarSelect}>
         <Select
           name="color"
@@ -299,27 +299,5 @@ const PlayerView = memo(function PlayerView({
     </div>
   );
 });
-
-const CustomAvatarValue = ({ children }: any) => (
-  <div className="select__single-value">
-    {children}
-    <Image
-      width={100}
-      height={100}
-      src={children.props.src}
-      alt="Selected Image"
-    />
-  </div>
-);
-
-const CustomColorValue = ({ children }: any) => (
-  <div className="select__single-value">
-    <div
-      className="colorBlock"
-      style={{ background: children.props.style.background }}
-    ></div>
-    {children}
-  </div>
-);
 
 export default PlayerView;

@@ -14,14 +14,16 @@ export interface Player extends User {
   points: number;
   life: number;
   choices: string[];
+  team?: number;
 }
 const checkAnswers = (lobby: Lobby) => {
   let updatedLobby = lobby;
   updatedLobby.users.forEach((player: Player) => {
-    if (
-      player.choices[0] === updatedLobby.game?.currentQuestion.correctAnswer
-    ) {
-      player.points += 50;
+    let index = player.choices.findIndex(
+      (choice) => choice === updatedLobby.game?.currentQuestion.correctAnswer
+    );
+    if (index !== -1) {
+      player.points += 50 - index * 15;
     }
     player.choices = [];
   });

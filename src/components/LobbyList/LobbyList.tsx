@@ -43,27 +43,29 @@ export const LobbyList = ({
   const { lobbies, message } = data;
 
   return (
-    <div className={`frame ${styles.lobbyListContainer}`}>
-      <h2>Lobby List</h2>
-      <div className={styles.lobbyInput}>
-        <input
-          type="text"
-          value={lobbyName}
-          onChange={(e) => setLobbyName(e.target.value)}
-          placeholder="Enter lobby name"
-        />
-        <button onClick={createLobby}>Create Lobby</button>
-        <Image
-          onClick={() => {
-            socket.emit("get_lobbies");
-          }}
-          height={25}
-          width={25}
-          src="/refresh.svg"
-          alt="Refresh"
-          className={styles.refreshIcon}
-        />
-        {message}
+    <div className={` ${styles.lobbyListContainer}`}>
+      <div className="frame">
+        <h2>Lobby List</h2>
+        <div className={styles.lobbyInput}>
+          <input
+            type="text"
+            value={lobbyName}
+            onChange={(e) => setLobbyName(e.target.value)}
+            placeholder="Enter lobby name"
+          />
+          <button onClick={createLobby}>Create Lobby</button>
+          <Image
+            onClick={() => {
+              socket.emit("get_lobbies");
+            }}
+            height={25}
+            width={25}
+            src="/refresh.svg"
+            alt="Refresh"
+            className={styles.refreshIcon}
+          />
+          {message}
+        </div>
       </div>
       <ul>
         {lobbies.map((lobby) => (
@@ -72,6 +74,7 @@ export const LobbyList = ({
             onClick={() => {
               joinLobby(lobby.id);
             }}
+            className="frame"
           >
             {lobby.name} {lobby.users.length}/8
           </li>

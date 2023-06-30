@@ -13,7 +13,7 @@ export const PlayerCard = ({
   const user = useUserContext().user;
 
   return (
-    <>
+    <div className="frame">
       {" "}
       <div
         style={{
@@ -36,6 +36,6 @@ export const PlayerCard = ({
         </div>
       )) ||
         (player.isReady && <p>READY</p>)}
-    </>
+    </div>
   );
 };

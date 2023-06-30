@@ -6,7 +6,11 @@ export const Scores = ({ players }: { players: Player[] }) => {
     <div className={styles.scores}>
       {players.map((player) => {
         return (
-          <div key={player.id}>
+          <div
+            key={player.id}
+            className="frame"
+            style={{ display: "flex", flexDirection: "column" }}
+          >
             {" "}
             <div
               style={{
