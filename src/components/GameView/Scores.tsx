@@ -1,7 +1,14 @@
 import { Player } from "@/gameLogic";
 import Image from "next/image";
 import styles from "./styles.module.scss";
-export const Scores = ({ players }: { players: Player[] }) => {
+import { GameMode } from "@/gameLogic/lobby";
+export const Scores = ({
+  players,
+  mode,
+}: {
+  players: Player[];
+  mode: GameMode;
+}) => {
   return (
     <div className={styles.scores}>
       {players.map((player) => {
@@ -29,7 +36,9 @@ export const Scores = ({ players }: { players: Player[] }) => {
               />
             </div>
             <span>{player.name}</span>
-            <span>{player.points}</span>
+            <span>
+              {(mode === GameMode.DEATH_MATCH && player.life) || player.points}
+            </span>
           </div>
         );
       })}

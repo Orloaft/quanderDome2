@@ -4,6 +4,10 @@ import { TriviaQuestion } from "@/gameLogic/trivia";
 import { useUserContext } from "@/hooks/useUserContext";
 import React, { useState, useEffect } from "react";
 import { uuid as v4 } from "uuidv4";
+import {
+  emitClickEvent,
+  handleThrottledClick,
+} from "@/utils/handleThrottledClick";
 interface TriviaBoxProps {
   question: TriviaQuestion;
   submitAnswer: any;
@@ -30,6 +34,7 @@ const TriviaBox: React.FC<TriviaBoxProps> = ({
               }`}
               key={v4()}
               onClick={() => {
+                console.log("clicked answer");
                 submitAnswer(answer);
               }}
             >

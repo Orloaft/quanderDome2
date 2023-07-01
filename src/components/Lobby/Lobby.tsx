@@ -45,7 +45,20 @@ export const LobbyView = ({
             Leave lobby
           </button>
           {userId === lobby.hostId && (
-            <button className={styles.startButton} onClick={startGame}>
+            <button
+              className={styles.startButton}
+              style={{
+                backgroundColor:
+                  lobby.users.find((user) => user.isReady === false) !==
+                  undefined
+                    ? "black"
+                    : "",
+              }}
+              onClick={startGame}
+              disabled={
+                lobby.users.find((user) => user.isReady === false) !== undefined
+              }
+            >
               Start
             </button>
           )}
@@ -53,6 +66,7 @@ export const LobbyView = ({
       </div>
       <div className={styles.playerscontainer}>
         <Players
+          teams={lobby.config.teams}
           players={lobby.users}
           hostId={lobby.hostId}
           updatePlayer={updatePlayer}

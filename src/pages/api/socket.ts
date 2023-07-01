@@ -56,6 +56,7 @@ const SocketHandler = (req: any, res: any) => {
       socket.on(
         "submit_answer",
         (lobbyId: string, playerId: string, answer: string) => {
+          console.log("received answer at socket");
           const updatedLobby = submitAnswer(lobbyId, playerId, answer);
           if (updatedLobby) {
             const user = updatedLobby.users.find((u) => u.id === playerId);
@@ -84,7 +85,7 @@ const SocketHandler = (req: any, res: any) => {
       });
       socket.on("update_config", (lobbyId: string, config: GameConfig) => {
         const updatedLobby = updateConfig(lobbyId, config);
-
+        console.log("updating config");
         if (updatedLobby) {
           io.to(lobbyId).emit("update_lobby_res", updatedLobby);
         }
@@ -118,7 +119,8 @@ const SocketHandler = (req: any, res: any) => {
         }
       });
       socket.on("get_lobbies", () => {
-        io.to(socket.id).emit("get_lobbies_res", lobbies);
+        let publicLobbies = lobbies.filter((lobby) => lobby.public === true);
+        io.to(socket.id).emit("get_lobbies_res", publicLobbies);
       });
       socket.on("leave_lobby", (userId: string, socketId: string) => {
         const oldLobby = removeUserFromLobby(userId);

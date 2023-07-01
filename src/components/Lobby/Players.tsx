@@ -8,7 +8,9 @@ export const Players = memo(function Players({
   updatePlayer,
   leaveLobby,
   hostId,
+  teams,
 }: {
+  teams: boolean;
   players: Player[];
   hostId: string;
   updatePlayer: (e: any) => void;
@@ -21,7 +23,7 @@ export const Players = memo(function Players({
         return (
           <div key={u.id}>
             <p style={{ color: u.socketId ? u.color : "grey" }}>{u.name}</p>
-            <PlayerCard player={u} updatePlayer={updatePlayer} />
+            <PlayerCard player={u} updatePlayer={updatePlayer} teams={teams} />
 
             {user.id === hostId && u.id !== user.id && (
               <div

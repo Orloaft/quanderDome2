@@ -1,5 +1,5 @@
 import { User } from "./users";
-import { Lobby, lobbies } from "./lobby";
+import { GameMode, Lobby, closeLobby, lobbies } from "./lobby";
 import fetchTriviaQuestions, { TriviaQuestion } from "./trivia";
 
 export interface GameData {
@@ -14,19 +14,43 @@ export interface Player extends User {
   points: number;
   life: number;
   choices: string[];
-  team?: number;
+  team: number;
 }
 const checkAnswers = (lobby: Lobby) => {
   let updatedLobby = lobby;
-  updatedLobby.users.forEach((player: Player) => {
-    let index = player.choices.findIndex(
-      (choice) => choice === updatedLobby.game?.currentQuestion.correctAnswer
-    );
-    if (index !== -1) {
-      player.points += 50 - index * 15;
-    }
-    player.choices = [];
-  });
+  switch (updatedLobby.config.mode) {
+    case GameMode.NORMAL:
+      updatedLobby.users.forEach((player: Player) => {
+        let index = player.choices.findIndex(
+          (choice) =>
+            choice === updatedLobby.game?.currentQuestion.correctAnswer
+        );
+        if (index !== -1) {
+          player.points += 50 - index * 15;
+        }
+        player.choices = [];
+      });
+      break;
+    case GameMode.DEATH_MATCH:
+      updatedLobby.users.forEach((player: Player) => {
+        let index = player.choices.findIndex(
+          (choice) =>
+            choice === updatedLobby.game?.currentQuestion.correctAnswer
+        );
+        if (index !== -1) {
+          player.life += 5 - index * 15;
+        } else {
+          player.life -= 40;
+        }
+        player.life < 0 && (player.life = 0);
+        player.choices = [];
+      });
+      if (!updatedLobby.users.find((user) => user.life > 0)) {
+        updatedLobby.game &&
+          (updatedLobby.game.round = updatedLobby.config.questions);
+      }
+      break;
+  }
 };
 const startRoundTimer = (lobby: Lobby, io: any) => {
   let updatedLobby = lobby;
@@ -36,23 +60,25 @@ const startRoundTimer = (lobby: Lobby, io: any) => {
 
     if (roundTime === 0) {
       clearInterval(interval);
-      if (lobby.game) {
-        checkAnswers(lobby);
-
-        lobby.game.round++;
-        if (lobby.game.round === lobby.game.questions.length) {
-          lobby.game.isConcluded = true;
-          io.to(lobby.id).emit("update_lobby_res", lobby);
-          startCountDown(lobby, io);
+      if (updatedLobby.game) {
+        checkAnswers(updatedLobby);
+        console.log(updatedLobby.game.questions);
+        updatedLobby.game.round++;
+        if (updatedLobby.game.round === updatedLobby.game.questions.length) {
+          updatedLobby.game.isConcluded = true;
+          io.to(lobby.id).emit("update_lobby_res", updatedLobby);
+          closeLobby(lobby.id);
         } else {
-          lobby.game.currentQuestion = lobby.game.questions[lobby.game.round];
-          lobby.game.countDown = 5;
-          lobby.chat.push({
+          updatedLobby.game.currentQuestion =
+            updatedLobby.game.questions[updatedLobby.game.round];
+          updatedLobby.game.countDown = 5;
+          updatedLobby.chat.push({
             userName: `Round`,
-            message: `${lobby.game.round + 1}`,
+            message: `${updatedLobby.game.round + 1}`,
           });
-          io.to(lobby.id).emit("update_lobby_res", lobby);
-          startCountDown(lobby, io);
+          console.log(updatedLobby.game.round);
+          io.to(lobby.id).emit("update_lobby_res", updatedLobby);
+          startCountDown(updatedLobby, io);
         }
       }
     } else if (roundTime < 10) {
@@ -78,6 +104,12 @@ const startGame = async (
   let newLobby = lobbies.find((lobby: Lobby) => lobby.id === lobbyId);
 
   if (newLobby) {
+    newLobby.public = false;
+    if (newLobby.config.mode === GameMode.DEATH_MATCH) {
+      newLobby.users.forEach((user) => {
+        newLobby && (user.life = newLobby.config.life);
+      });
+    }
     const { questions, category } = newLobby.config;
     let trivia: TriviaQuestion[] = await fetchTriviaQuestions(
       questions,
@@ -93,6 +125,7 @@ const startGame = async (
     };
     startCountDown(newLobby, io);
   }
+
   return newLobby;
 };
 const submitAnswer = (lobbyId: string, userId: string, answer: string) => {

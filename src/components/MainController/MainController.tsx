@@ -16,6 +16,7 @@ import TriviaBox from "../Trivia/TriviaView";
 import { GameView } from "../GameView/GameView";
 import { Scores } from "../GameView/Scores";
 import { ScoreBoard } from "../GameView/ScoreBoard";
+import { handleThrottledClick } from "@/utils/handleThrottledClick";
 
 export const MainController = () => {
   const [socket, socketInitializer] = useSocket();
@@ -40,10 +41,14 @@ export const MainController = () => {
   const startGame = () => {
     lobby && socket?.emit("start_game", lobby.id);
   };
-  const submitAnswer = (answer: string) => {
-    console.log("submitting answer");
-    lobby && user && socket?.emit("submit_answer", lobby.id, user.id, answer);
-  };
+  const submitAnswer = useCallback(
+    (answer: string) => {
+      console.log("submitting answer");
+      lobby && user && socket?.emit("submit_answer", lobby.id, user.id, answer);
+    },
+    [lobby, socket, user]
+  );
+
   const updatePlayer = (e: any) => {
     if (lobby) {
       user && socket?.emit("update_player", user.id, lobby.id, e);
@@ -118,7 +123,16 @@ export const MainController = () => {
                 style={{ display: "flex", width: "100%", maxHeight: "20rem" }}
               >
                 {(lobby.game.isConcluded && (
-                  <ScoreBoard players={lobby.users} />
+                  <>
+                    <ScoreBoard players={lobby.users} />
+                    <button
+                      onClick={() => {
+                        setData({ ...data, lobby: null });
+                      }}
+                    >
+                      Leave
+                    </button>
+                  </>
                 )) || (
                   <>
                     <GameView game={lobby.game} submitAnswer={submitAnswer} />
@@ -138,7 +152,7 @@ export const MainController = () => {
                 )}
               </div>
 
-              <Scores players={lobby.users} />
+              <Scores players={lobby.users} mode={lobby.config.mode} />
             </>
           ))
         ) : isConnected && !user ? (

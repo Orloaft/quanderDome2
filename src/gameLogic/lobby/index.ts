@@ -4,7 +4,7 @@ import { User, updateSocket } from "../users";
 import { v4 as uuidv4 } from "uuid";
 export enum GameMode {
   NORMAL = "Normal mode",
-  SUDDEN_DEATH = "Death match",
+  DEATH_MATCH = "Death match",
   MARATHON = "Marathon mode",
 }
 
@@ -16,6 +16,7 @@ export interface Lobby {
   config: GameConfig;
   game: GameData | null;
   chat: ChatMessage[];
+  public: boolean;
 }
 export interface GameConfig {
   mode: GameMode;
@@ -23,6 +24,7 @@ export interface GameConfig {
   category: number;
   time: number;
   teams: boolean;
+  life: number;
 }
 const lobbies: Lobby[] = [];
 const generateUniqueId = (): string => {
@@ -39,6 +41,7 @@ const updateConfig = (lobbyId: string, config: GameConfig) => {
   if (index !== -1) {
     lobbies[index].config = config;
   }
+  console.log(lobbies[index]);
   return lobbies[index];
 };
 function removeUserFromLobby(userId: string): Lobby | null {
@@ -115,6 +118,7 @@ const joinLobby = (user: User, id: string) => {
         choices: [],
         life: 0,
         points: 0,
+        team: 1,
       });
     }
   } else {
@@ -158,6 +162,7 @@ const createLobby = (host: User, name: string) => {
     category: 0,
     time: 20,
     teams: false,
+    life: 100,
   };
   const lobby: Lobby = {
     name: name,
@@ -169,11 +174,13 @@ const createLobby = (host: User, name: string) => {
         choices: [],
         life: 0,
         points: 0,
+        team: 1,
       },
     ],
     config: config,
     game: null,
     chat: [],
+    public: true,
   };
   !lobbies.find((lobby) => lobby.hostId === host.id) && lobbies.push(lobby);
   return lobby;

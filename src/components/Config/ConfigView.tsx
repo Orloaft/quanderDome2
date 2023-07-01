@@ -24,9 +24,9 @@ export const ConfigView = memo(function ConfigView({
 
     const newConfig = {
       ...config,
-      [name]: checked !== undefined ? checked : value,
+      [name]: event.target.type === "checkbox" ? checked : value,
     };
-
+    console.log(name, value, checked);
     onChange(newConfig);
   };
 
@@ -87,6 +87,17 @@ export const ConfigView = memo(function ConfigView({
             onChange={handleInputChange}
           />
         </label>
+        {config.mode === GameMode.DEATH_MATCH && (
+          <label>
+            Life totals:{" "}
+            <input
+              type="number"
+              name="life"
+              defaultValue={config.life}
+              onChange={handleInputChange}
+            />
+          </label>
+        )}
       </div>
     );
   } else {

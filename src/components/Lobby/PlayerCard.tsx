@@ -3,12 +3,15 @@ import Image from "next/image";
 import styles from "./styles.module.scss";
 import ReadyBox from "./ReadyBox";
 import { useUserContext } from "@/hooks/useUserContext";
+import { TeamSelect } from "./TeamSelect";
 export const PlayerCard = ({
   player,
   updatePlayer,
+  teams,
 }: {
   player: Player;
   updatePlayer: (e: any) => void;
+  teams: boolean;
 }) => {
   const user = useUserContext().user;
 
@@ -33,9 +36,25 @@ export const PlayerCard = ({
       {(user && player.id === user.id && (
         <div className={styles.readyBox}>
           <ReadyBox toggleReady={updatePlayer} isReady={player.isReady} />
+          {teams && player.team && (
+            <>
+              {" "}
+              <TeamSelect toggleTeam={updatePlayer} team={player.team} />{" "}
+              <span>Team {player.team}</span>
+            </>
+          )}
         </div>
       )) ||
-        (player.isReady && <p>READY</p>)}
+        (player.isReady && (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {teams && (
+              <span>
+                Team {player.team}
+                <p>READY</p>
+              </span>
+            )}
+          </div>
+        ))}
     </div>
   );
 };
