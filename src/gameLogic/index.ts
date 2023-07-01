@@ -47,7 +47,7 @@ const checkAnswers = (lobby: Lobby) => {
       });
       if (!updatedLobby.users.find((user) => user.life > 0)) {
         updatedLobby.game &&
-          (updatedLobby.game.round = updatedLobby.config.questions);
+          (updatedLobby.game.round = updatedLobby.config.questions - 1);
       }
       break;
   }
