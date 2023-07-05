@@ -20,6 +20,7 @@ export const LobbyList = ({
     message: "",
   });
   const createLobby = () => {
+    console.log("creating lob", lobbyName, user);
     socket.emit("create_lobby", lobbyName, user);
   };
   const joinLobby = useCallback(

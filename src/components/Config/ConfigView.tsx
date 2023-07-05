@@ -26,7 +26,6 @@ export const ConfigView = memo(function ConfigView({
       ...config,
       [name]: event.target.type === "checkbox" ? checked : value,
     };
-    console.log(name, value, checked);
     onChange(newConfig);
   };
 
@@ -46,7 +45,7 @@ export const ConfigView = memo(function ConfigView({
               </option>
             ))}
           </select>
-          <label>
+          {/* <label>
             <span>Teams:</span>
             <input
               name="teams"
@@ -56,7 +55,7 @@ export const ConfigView = memo(function ConfigView({
               type="checkbox"
               checked={config.teams}
             ></input>
-          </label>
+          </label> */}
         </label>
 
         <label>

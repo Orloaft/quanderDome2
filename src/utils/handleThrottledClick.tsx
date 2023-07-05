@@ -8,6 +8,5 @@ export function handleThrottledClick(handler: any, delay = 500) {
 }
 
 export function emitClickEvent(answer: string) {
-  console.log("submitting" + answer);
   clickSubject.next("click");
 }

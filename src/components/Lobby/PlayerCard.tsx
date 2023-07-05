@@ -47,12 +47,8 @@ export const PlayerCard = ({
       )) ||
         (player.isReady && (
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {teams && (
-              <span>
-                Team {player.team}
-                <p>READY</p>
-              </span>
-            )}
+            {teams && <span>Team {player.team}</span>}
+            <span>READY</span>
           </div>
         ))}
     </div>

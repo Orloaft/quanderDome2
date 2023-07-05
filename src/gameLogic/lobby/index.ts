@@ -41,7 +41,6 @@ const updateConfig = (lobbyId: string, config: GameConfig) => {
   if (index !== -1) {
     lobbies[index].config = config;
   }
-  console.log(lobbies[index]);
   return lobbies[index];
 };
 function removeUserFromLobby(userId: string): Lobby | null {

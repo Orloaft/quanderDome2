@@ -21,7 +21,14 @@ const handleSocketEvents = (
     if (lobby.isConcluded) {
       sessionStorage.removeItem("lobbyId");
     }
-    setData({ ...data, lobby: lobby });
+    const user = lobby.users.find(
+      (u: User | Player) => u.id === sessionStorage.getItem("userId")
+    );
+    if (user) {
+      setData({ ...data, lobby: lobby, user: user });
+    } else {
+      setData({ ...data, lobby: lobby });
+    }
   });
   socket.on("leave_lobby_res", () => {
     sessionStorage.removeItem("lobbyId");

@@ -12,11 +12,10 @@ import { LobbyView } from "../Lobby/Lobby";
 import ChatBox from "../Chat/Chat";
 import ChatInput from "../Chat/ChatInput";
 import styles from "./styles.module.scss";
-import TriviaBox from "../Trivia/TriviaView";
 import { GameView } from "../GameView/GameView";
 import { Scores } from "../GameView/Scores";
-import { ScoreBoard } from "../GameView/ScoreBoard";
-import { handleThrottledClick } from "@/utils/handleThrottledClick";
+
+import Confetti from "react-confetti";
 
 export const MainController = () => {
   const [socket, socketInitializer] = useSocket();
@@ -43,7 +42,6 @@ export const MainController = () => {
   };
   const submitAnswer = useCallback(
     (answer: string) => {
-      console.log("submitting answer");
       lobby && user && socket?.emit("submit_answer", lobby.id, user.id, answer);
     },
     [lobby, socket, user]
@@ -124,7 +122,7 @@ export const MainController = () => {
               >
                 {(lobby.game.isConcluded && (
                   <>
-                    <ScoreBoard players={lobby.users} />
+                    <Confetti height={3000} width={3000} tweenDuration={5000} />
                     <button
                       onClick={() => {
                         setData({ ...data, lobby: null });

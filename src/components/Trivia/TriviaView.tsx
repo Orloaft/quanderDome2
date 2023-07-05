@@ -21,7 +21,7 @@ const TriviaBox: React.FC<TriviaBoxProps> = ({
 }) => {
   const user = useUserContext().user as Player;
   return (
-    <div className="trivia-box" style={style}>
+    <div className={styles["trivia-box"]} style={style}>
       <div className="frame">{question.question}</div>
       <div className={styles.optionContainer}>
         {question.answers.map((answer) => {
@@ -34,7 +34,6 @@ const TriviaBox: React.FC<TriviaBoxProps> = ({
               }`}
               key={v4()}
               onClick={() => {
-                console.log("clicked answer");
                 submitAnswer(answer);
               }}
             >

@@ -38,9 +38,9 @@ const checkAnswers = (lobby: Lobby) => {
             choice === updatedLobby.game?.currentQuestion.correctAnswer
         );
         if (index !== -1) {
-          player.life += 5 - index * 15;
+          player.life += 5 - index * 10;
         } else {
-          player.life -= 40;
+          player.life -= 25;
         }
         player.life < 0 && (player.life = 0);
         player.choices = [];
@@ -62,7 +62,6 @@ const startRoundTimer = (lobby: Lobby, io: any) => {
       clearInterval(interval);
       if (updatedLobby.game) {
         checkAnswers(updatedLobby);
-        console.log(updatedLobby.game.questions);
         updatedLobby.game.round++;
         if (updatedLobby.game.round === updatedLobby.game.questions.length) {
           updatedLobby.game.isConcluded = true;
@@ -76,7 +75,6 @@ const startRoundTimer = (lobby: Lobby, io: any) => {
             userName: `Round`,
             message: `${updatedLobby.game.round + 1}`,
           });
-          console.log(updatedLobby.game.round);
           io.to(lobby.id).emit("update_lobby_res", updatedLobby);
           startCountDown(updatedLobby, io);
         }
