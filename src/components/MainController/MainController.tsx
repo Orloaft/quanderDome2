@@ -151,7 +151,7 @@ export const MainController = () => {
                         height: "100%",
                       }}
                     >
-                      <div style={{ height: "100%" }}>
+                      <div className="chat-box" style={{ height: "100%" }}>
                         <ChatBox messages={lobby.chat} />
                         <ChatInput onSendMessage={sendMessage} />
                       </div>

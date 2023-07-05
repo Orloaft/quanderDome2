@@ -19,4 +19,7 @@
     height: 16px;
     margin-right: 8px;
   }
+  @media (max-width: 768px) {
+    margin-bottom: 25%;
+  }
 }
