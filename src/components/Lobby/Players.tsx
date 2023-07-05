@@ -2,7 +2,7 @@ import { Player } from "@/gameLogic";
 import { memo } from "react";
 import { useUserContext } from "@/hooks/useUserContext";
 import { PlayerCard } from "./PlayerCard";
-
+import styles from "./styles.module.scss";
 export const Players = memo(function Players({
   players,
   updatePlayer,
@@ -18,13 +18,12 @@ export const Players = memo(function Players({
 }) {
   let user = useUserContext().user as Player;
   return (
-    <div
-      style={{ position: "absolute", left: 0, display: "flex", gap: "1rem" }}
-    >
+    <div className={styles.players}>
       {players.map((u: Player) => {
         return (
           <div
             key={u.id}
+            className={styles.playerCard}
             style={{
               display: "flex",
               flexDirection: "column",

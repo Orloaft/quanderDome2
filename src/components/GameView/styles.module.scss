@@ -2,10 +2,13 @@
     position: absolute;
     display: flex;
     gap: 1rem;
-    bottom: 30%;
+
+    flex-direction: column;
+    left: 0;
     @media (max-width: 768px) {
+        flex-direction: row !important;
         right: 0;
-        bottom: 30%;
+        bottom: 25%;
     }
 }
 .countDown {
