@@ -18,10 +18,19 @@ export const Players = memo(function Players({
 }) {
   let user = useUserContext().user as Player;
   return (
-    <div style={{ display: "flex", gap: "1rem" }}>
+    <div
+      style={{ position: "absolute", left: 0, display: "flex", gap: "1rem" }}
+    >
       {players.map((u: Player) => {
         return (
-          <div key={u.id}>
+          <div
+            key={u.id}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <p style={{ color: u.socketId ? u.color : "grey" }}>{u.name}</p>
             <PlayerCard player={u} updatePlayer={updatePlayer} teams={teams} />
 

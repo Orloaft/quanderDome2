@@ -201,6 +201,62 @@ const PlayerView = memo(function PlayerView({
   const handleChange = (selectedOption: any, { name }: any) => {
     updatePlayer({ name, value: selectedOption.value });
   };
+  const nextAvatar = () => {
+    let current = avatarOptions.find(
+      (option) => option.value === player.avatar
+    );
+    if (current) {
+      let index = avatarOptions.indexOf(current) + 1;
+      updatePlayer({
+        name: "avatar",
+        value:
+          index === avatarOptions.length
+            ? avatarOptions[0].value
+            : avatarOptions[index].value,
+      });
+    }
+  };
+  const nextColor = () => {
+    let current = colorOptions.find((option) => option.value === player.color);
+    if (current) {
+      let index = colorOptions.indexOf(current) + 1;
+      updatePlayer({
+        name: "color",
+        value:
+          index === colorOptions.length
+            ? colorOptions[0].value
+            : colorOptions[index].value,
+      });
+    }
+  };
+  const prevAvatar = () => {
+    let current = avatarOptions.find(
+      (option) => option.value === player.avatar
+    );
+    if (current) {
+      let index = avatarOptions.indexOf(current) - 1;
+      updatePlayer({
+        name: "avatar",
+        value:
+          index < 0
+            ? avatarOptions[avatarOptions.length - 1].value
+            : avatarOptions[index].value,
+      });
+    }
+  };
+  const prevColor = () => {
+    let current = colorOptions.find((option) => option.value === player.color);
+    if (current) {
+      let index = colorOptions.indexOf(current) - 1;
+      updatePlayer({
+        name: "color",
+        value:
+          index < 0
+            ? colorOptions[colorOptions.length - 1].value
+            : colorOptions[index].value,
+      });
+    }
+  };
   const customStyles = {
     menuList: (base: any) => ({
       ...base,
@@ -249,33 +305,93 @@ const PlayerView = memo(function PlayerView({
     <div className={`frame ${styles.playerViewContainer}`}>
       <p style={{ color: "#fbeaeb", fontSize: "3rem" }}>{player.name}</p>
       <div className={styles.avatarSelect}>
-        <Select
-          name="color"
-          options={colorOptions}
-          styles={customStyles}
-          onChange={handleChange}
-          placeholder={
-            <div
-              style={{
-                background: "white",
-                height: "2rem",
-                width: "2rem",
-                borderRadius: "4px",
-              }}
-            ></div>
-          }
-          className={styles["custom-select"]}
-          classNamePrefix="select"
-          isSearchable={false}
-          menuPlacement="auto"
-        />
+        <div style={{ position: "relative" }}>
+          <Image
+            onClick={nextColor}
+            style={{
+              cursor: "pointer",
+              position: "absolute",
+              zIndex: "5",
+              right: "10%",
+              bottom: "30%",
+            }}
+            src="/right-arrow.svg"
+            width={15}
+            height={15}
+            alt="right arrow"
+          />
+          <Select
+            name="color"
+            options={colorOptions}
+            styles={customStyles}
+            value={{
+              value: player.color,
+              label: (
+                <div
+                  style={{
+                    background: player.color,
+                    height: "2rem",
+                    width: "2rem",
+                    borderRadius: "4px",
+                  }}
+                ></div>
+              ),
+            }}
+            onChange={handleChange}
+            placeholder={
+              <div
+                style={{
+                  background: "white",
+                  height: "2rem",
+                  width: "2rem",
+                  borderRadius: "4px",
+                }}
+              ></div>
+            }
+            className={styles["custom-select"]}
+            classNamePrefix="select"
+            isSearchable={false}
+            menuPlacement="auto"
+          />{" "}
+          <Image
+            onClick={prevColor}
+            style={{
+              cursor: "pointer",
+              position: "absolute",
+              zIndex: "5",
+              left: "10%",
+              bottom: "30%",
+              transform: "rotate(180deg)",
+            }}
+            src="/right-arrow.svg"
+            width={15}
+            height={15}
+            alt=""
+          />
+        </div>
         <div
           style={{
             border: `8px solid ${player.color}`,
             padding: 0,
             borderRadius: "4px",
+            position: "relative",
           }}
         >
+          {" "}
+          <Image
+            onClick={nextAvatar}
+            style={{
+              cursor: "pointer",
+              position: "absolute",
+              zIndex: "5",
+              right: "-25%",
+              bottom: "50%",
+            }}
+            src="/right-arrow.svg"
+            width={15}
+            height={15}
+            alt=""
+          />
           <Select
             name="avatar"
             className={styles["custom-select"]}
@@ -293,6 +409,21 @@ const PlayerView = memo(function PlayerView({
             classNamePrefix="select"
             isSearchable={false}
             menuPlacement="auto"
+          />{" "}
+          <Image
+            onClick={prevAvatar}
+            style={{
+              cursor: "pointer",
+              position: "absolute",
+              zIndex: "5",
+              left: "-25%",
+              bottom: "50%",
+              transform: "rotate(180deg)",
+            }}
+            src="/right-arrow.svg"
+            width={15}
+            height={15}
+            alt=""
           />
         </div>
       </div>

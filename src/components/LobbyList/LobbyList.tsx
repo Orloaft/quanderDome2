@@ -46,15 +46,14 @@ export const LobbyList = ({
   return (
     <div className={` ${styles.lobbyListContainer}`}>
       <div className="frame">
-        <h2>Lobby List</h2>
+        <h2 style={{ textAlign: "center" }}>Lobby List</h2>
         <div className={styles.lobbyInput}>
           <input
             type="text"
             value={lobbyName}
             onChange={(e) => setLobbyName(e.target.value)}
             placeholder="Enter lobby name"
-          />
-          <button onClick={createLobby}>Create Lobby</button>
+          />{" "}
           <Image
             onClick={() => {
               socket.emit("get_lobbies");
@@ -65,7 +64,15 @@ export const LobbyList = ({
             alt="Refresh"
             className={styles.refreshIcon}
           />
-          {message}
+          <button onClick={createLobby}>Create Lobby</button>
+          {message && (
+            <div
+              className="frame"
+              style={{ position: "absolute", bottom: "-100%" }}
+            >
+              {message}
+            </div>
+          )}
         </div>
       </div>
       <ul>

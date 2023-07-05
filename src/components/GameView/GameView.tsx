@@ -9,7 +9,7 @@ export const GameView = ({
   submitAnswer: any;
 }) => {
   return (
-    <div style={{ position: "relative", height: "100%", width: "100%" }}>
+    <div style={{ position: "relative", height: "100%", width: "90%" }}>
       {game.countDown > 0 && (
         <div className={styles.countDown}>
           <span className={styles.number}>{game.countDown}</span>

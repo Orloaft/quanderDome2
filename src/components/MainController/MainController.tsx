@@ -122,14 +122,24 @@ export const MainController = () => {
               >
                 {(lobby.game.isConcluded && (
                   <>
-                    <Confetti height={3000} width={3000} tweenDuration={5000} />
-                    <button
-                      onClick={() => {
-                        setData({ ...data, lobby: null });
-                      }}
-                    >
-                      Leave
-                    </button>
+                    <Confetti height={1000} width={3000} tweenDuration={5000} />
+                    <div className={styles.conclusionBox}>
+                      <span style={{ textAlign: "center", fontSize: "2rem" }}>
+                        GAME OVER!
+                      </span>
+                      <Scores
+                        style={{ bottom: "-20vh" }}
+                        players={lobby.users}
+                        mode={lobby.config.mode}
+                      />
+                      <button
+                        onClick={() => {
+                          setData({ ...data, lobby: null });
+                        }}
+                      >
+                        Leave
+                      </button>{" "}
+                    </div>
                   </>
                 )) || (
                   <>
@@ -150,7 +160,9 @@ export const MainController = () => {
                 )}
               </div>
 
-              <Scores players={lobby.users} mode={lobby.config.mode} />
+              {!lobby.game.isConcluded && (
+                <Scores players={lobby.users} mode={lobby.config.mode} />
+              )}
             </>
           ))
         ) : isConnected && !user ? (

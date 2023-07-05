@@ -27,8 +27,8 @@ export const PlayerCard = ({
         }}
       >
         <Image
-          width={30}
-          height={30}
+          width={100}
+          height={100}
           src={player.avatar}
           alt="Selected Image"
         />

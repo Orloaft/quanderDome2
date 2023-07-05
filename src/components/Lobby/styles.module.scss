@@ -17,7 +17,9 @@
   align-items: center;
   color: #fbeaeb;
   font-size: 14px;
-
+  @media (max-width: 768px) {
+    width: 60vw;
+  }
   .avatarSelect {
     // margin-bottom: 10px;
     // width: 180px;

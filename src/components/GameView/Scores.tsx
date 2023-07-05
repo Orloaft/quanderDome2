@@ -5,12 +5,14 @@ import { GameMode } from "@/gameLogic/lobby";
 export const Scores = ({
   players,
   mode,
+  style,
 }: {
   players: Player[];
   mode: GameMode;
+  style?: any;
 }) => {
   return (
-    <div className={styles.scores}>
+    <div className={styles.scores} style={style}>
       {players
         .sort((a, b) => {
           if (a.points < b.points) {
@@ -37,8 +39,8 @@ export const Scores = ({
                 }}
               >
                 <Image
-                  width={30}
-                  height={30}
+                  width={60}
+                  height={60}
                   src={player.avatar}
                   alt="Selected Image"
                 />

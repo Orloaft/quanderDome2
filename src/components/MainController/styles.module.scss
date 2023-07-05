@@ -5,15 +5,27 @@
     justify-content: flex-start;
     color: #fbeaeb;
     font-size: 14px;
-
+    height: fit-content;
     p {
         font-size: 18px;
         margin-bottom: 10px;
     }
     @media (max-width: 768px) {
         flex-direction: column;
+        align-items: center;
+        width: 75vw;
         & div {
             flex-direction: column;
         }
+    }
+}
+.conclusionBox {
+    position: absolute;
+    display: flex;
+    top: 30%;
+    @media (max-width: 768px) {
+        top: 25%;
+        width: 50%;
+        left: 25%;
     }
 }
