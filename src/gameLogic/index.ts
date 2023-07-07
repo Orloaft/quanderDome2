@@ -16,9 +16,22 @@ export interface Player extends User {
   choices: string[];
   team: number;
 }
+const endGame = (lobbyId: string) => {
+  let updatedLobby = lobbies.find((lobby: Lobby) => lobby.id === lobbyId);
+  if (updatedLobby) {
+    const { game } = updatedLobby;
+    if (game) {
+      game.isConcluded = true;
+    }
+    closeLobby(updatedLobby.id);
+  }
+
+  return updatedLobby;
+};
 const checkAnswers = (lobby: Lobby) => {
   let updatedLobby = lobby;
   switch (updatedLobby.config.mode) {
+    case GameMode.MARATHON:
     case GameMode.NORMAL:
       updatedLobby.users.forEach((player: Player) => {
         let index = player.choices.findIndex(
@@ -64,9 +77,19 @@ const startRoundTimer = (lobby: Lobby, io: any) => {
         checkAnswers(updatedLobby);
         updatedLobby.game.round++;
         if (updatedLobby.game.round === updatedLobby.game.questions.length) {
-          updatedLobby.game.isConcluded = true;
-          io.to(lobby.id).emit("update_lobby_res", updatedLobby);
-          closeLobby(lobby.id);
+          if (updatedLobby.config.mode !== GameMode.MARATHON) {
+            updatedLobby.game.isConcluded = true;
+            io.to(lobby.id).emit("update_lobby_res", updatedLobby);
+            closeLobby(lobby.id);
+          } else {
+            updatedLobby.game.currentQuestion = {
+              category: "",
+              question: "",
+              correctAnswer: "",
+              answers: [],
+            };
+            io.to(lobby.id).emit("update_lobby_res", updatedLobby);
+          }
         } else {
           updatedLobby.game.currentQuestion =
             updatedLobby.game.questions[updatedLobby.game.round];
@@ -136,4 +159,4 @@ const submitAnswer = (lobbyId: string, userId: string, answer: string) => {
   }
   return updatedLobby;
 };
-export { startGame, submitAnswer };
+export { startGame, submitAnswer, startCountDown, endGame };

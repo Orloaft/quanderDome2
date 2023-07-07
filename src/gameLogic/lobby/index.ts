@@ -2,6 +2,7 @@ import { ChatMessage } from "@/components/Chat/Chat";
 import { GameData, Player } from "..";
 import { User, updateSocket } from "../users";
 import { v4 as uuidv4 } from "uuid";
+import fetchTriviaQuestions from "../trivia";
 export enum GameMode {
   NORMAL = "Normal mode",
   DEATH_MATCH = "Death match",
@@ -35,7 +36,19 @@ const generateUniqueId = (): string => {
     return newId;
   }
 };
-
+const nextTrivia = async (lobbyId: string) => {
+  const updatedLobby = lobbies.find((lobby) => lobby.id === lobbyId);
+  if (updatedLobby && updatedLobby.game) {
+    updatedLobby.game.questions = await fetchTriviaQuestions(
+      updatedLobby.config.questions,
+      updatedLobby.config.category
+    );
+    updatedLobby.game.round = 0;
+    updatedLobby.game.currentQuestion = updatedLobby.game.questions[0];
+    updatedLobby.game.countDown = 5;
+  }
+  return updatedLobby;
+};
 const updateConfig = (lobbyId: string, config: GameConfig) => {
   const index = lobbies.findIndex((lobby) => lobby.id === lobbyId);
   if (index !== -1) {
@@ -185,6 +198,7 @@ const createLobby = (host: User, name: string) => {
   return lobby;
 };
 export {
+  nextTrivia,
   updatePlayer,
   createLobby,
   joinLobby,

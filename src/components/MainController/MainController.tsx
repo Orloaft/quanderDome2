@@ -40,6 +40,12 @@ export const MainController = () => {
   const startGame = () => {
     lobby && socket?.emit("start_game", lobby.id);
   };
+  const endGame = () => {
+    lobby && socket?.emit("end_game", lobby.id);
+  };
+  const nextTrivia = () => {
+    lobby && socket?.emit("next_trivia", lobby.id);
+  };
   const submitAnswer = useCallback(
     (answer: string) => {
       lobby && user && socket?.emit("submit_answer", lobby.id, user.id, answer);
@@ -143,7 +149,15 @@ export const MainController = () => {
                   </>
                 )) || (
                   <>
-                    <GameView game={lobby.game} submitAnswer={submitAnswer} />
+                    <GameView
+                      game={lobby.game}
+                      config={lobby.config}
+                      submitAnswer={submitAnswer}
+                      onChange={updateConfig}
+                      isOwner={user.id === lobby.hostId}
+                      nextTrivia={nextTrivia}
+                      endGame={endGame}
+                    />
                     <div
                       style={{
                         display: "flex",

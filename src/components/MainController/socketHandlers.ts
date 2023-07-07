@@ -18,6 +18,7 @@ const handleSocketEvents = (
     setData({ ...data, user: user });
   });
   socket.on("update_lobby_res", (lobby) => {
+    console.log(lobby);
     if (lobby.isConcluded) {
       sessionStorage.removeItem("lobbyId");
     }

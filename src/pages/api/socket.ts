@@ -1,4 +1,10 @@
-import { Player, startGame, submitAnswer } from "@/gameLogic";
+import {
+  Player,
+  endGame,
+  startCountDown,
+  startGame,
+  submitAnswer,
+} from "@/gameLogic";
 import {
   GameConfig,
   Lobby,
@@ -6,6 +12,7 @@ import {
   getUpdatedLobby,
   joinLobby,
   lobbies,
+  nextTrivia,
   removeUserFromLobby,
   sendLobbyMessage,
   updateConfig,
@@ -37,11 +44,24 @@ const SocketHandler = (req: any, res: any) => {
           io.to(lobby.id).emit("update_lobby_res", lobby);
         }
       });
+      socket.on("next_trivia", async (lobbyId: string) => {
+        const updatedLobby = await nextTrivia(lobbyId);
+        if (updatedLobby) {
+          startCountDown(updatedLobby, io);
+          io.to(lobbyId).emit("update_lobby_res", updatedLobby);
+        }
+      });
       socket.on("send_message", (lobbyId, username, message) => {
         let lobby = sendLobbyMessage(lobbyId, username, message);
 
         if (lobby) {
           io.to(lobby.id).emit("update_lobby_res", lobby);
+        }
+      });
+      socket.on("end_game", (lobbyId) => {
+        const updatedLobby = endGame(lobbyId);
+        if (updatedLobby) {
+          io.to(lobbyId).emit("update_lobby_res", updatedLobby);
         }
       });
       socket.on(
