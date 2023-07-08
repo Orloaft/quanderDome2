@@ -23,7 +23,6 @@ const endGame = (lobbyId: string) => {
     if (game) {
       game.isConcluded = true;
     }
-    closeLobby(updatedLobby.id);
   }
 
   return updatedLobby;

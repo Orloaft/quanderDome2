@@ -53,23 +53,23 @@ export const GameView = ({
           <div className={styles.countDown}>
             <span className={styles.number}>{game.countDown}</span>
           </div>
-        ))}
-      {(game.currentQuestion.question && (
-        <TriviaBox
-          style={{ width: "30rem", opacity: `${game.countDown ? `0` : `1`}` }}
-          question={game.currentQuestion}
-          submitAnswer={submitAnswer}
-        />
-      )) ||
-        (!game.isConcluded && (
-          <MarathonConfig
-            nextTrivia={nextTrivia}
-            endGame={endGame}
-            isOwner={isOwner}
-            config={config}
-            onChange={onChange}
+        ),
+        (game.currentQuestion.question && (
+          <TriviaBox
+            style={{ width: "30rem", opacity: `${game.countDown ? `0` : `1`}` }}
+            question={game.currentQuestion}
+            submitAnswer={submitAnswer}
           />
-        ))}
+        )) ||
+          (!game.isConcluded && (
+            <MarathonConfig
+              nextTrivia={nextTrivia}
+              endGame={endGame}
+              isOwner={isOwner}
+              config={config}
+              onChange={onChange}
+            />
+          )))}
       <div
         className="frame"
         style={{ width: "fit-content", fontSize: "1.25rem" }}
