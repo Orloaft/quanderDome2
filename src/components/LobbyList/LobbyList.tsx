@@ -6,6 +6,8 @@ import { useUserContext } from "@/hooks/useUserContext";
 import Image from "next/image";
 import styles from "./styles.module.scss";
 import { Lobby } from "@/gameLogic/lobby";
+import { UserState } from "@/actions/types";
+import { useSelector } from "react-redux";
 
 export const LobbyList = ({
   socket,
@@ -13,7 +15,7 @@ export const LobbyList = ({
   socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 }) => {
   let lobbyId = sessionStorage.getItem("lobbyId");
-  const user = useUserContext().user;
+  const user = useSelector((state: any) => state.user.userData);
   const [lobbyName, setLobbyName] = useState("");
   const [data, setData] = useState<{ lobbies: Lobby[]; message: string }>({
     lobbies: [],

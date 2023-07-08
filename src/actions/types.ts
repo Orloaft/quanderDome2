@@ -1,3 +1,4 @@
+import { Player } from "@/gameLogic";
 import { Lobby } from "@/gameLogic/lobby";
 import { User } from "@/gameLogic/users";
 
@@ -7,9 +8,9 @@ export interface AppState {
 }
 
 export interface LobbyState {
-  lobbyData?: Lobby;
+  lobbyData?: Lobby | null;
 }
 
 export interface UserState {
-  userData?: User;
+  userData?: User | Player | null;
 }

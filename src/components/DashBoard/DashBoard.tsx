@@ -1,15 +1,16 @@
-import { useUserContext } from "@/hooks/useUserContext";
 import styles from "./DashBoard.module.scss";
 import PlayerView from "../Lobby/PlayerView";
+import { UserState } from "@/actions/types";
+import { connect, useSelector } from "react-redux";
 
-export const DashBoard = ({
+const DashBoard = ({
   signOut,
   updatePlayer,
 }: {
   signOut: () => void;
   updatePlayer: any;
 }) => {
-  const { user } = useUserContext();
+  const user = useSelector((state: any) => state.user.userData);
   return (
     user && (
       <div>
@@ -20,3 +21,5 @@ export const DashBoard = ({
     )
   );
 };
+
+export default DashBoard;

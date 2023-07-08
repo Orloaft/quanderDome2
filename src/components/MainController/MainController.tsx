@@ -1,12 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import SignInView from "../SignIn/SignIn";
 import useSocket from "@/hooks/useSocket";
-import { UserContext } from "@/hooks/useUserContext";
 import handleSocketEvents, { tearDownSocketEvents } from "./socketHandlers";
-import { User } from "@/gameLogic/users";
-import { DashBoard } from "../DashBoard/DashBoard";
+import DashBoard from "../DashBoard/DashBoard";
 import { LobbyList } from "../LobbyList/LobbyList";
-import { Player } from "@/gameLogic";
 import { GameConfig, Lobby } from "@/gameLogic/lobby";
 import { LobbyView } from "../Lobby/Lobby";
 import ChatBox from "../Chat/Chat";
@@ -14,18 +11,14 @@ import ChatInput from "../Chat/ChatInput";
 import styles from "./styles.module.scss";
 import { GameView } from "../GameView/GameView";
 import { Scores } from "../GameView/Scores";
-
 import Confetti from "react-confetti";
+import { connect } from "react-redux";
+import { setLobbyData, setUserData } from "@/actions";
+import { store } from "@/store";
 
-export const MainController = () => {
+const MainController = ({ lobby, user }: { lobby: any; user: any }) => {
   const [socket, socketInitializer] = useSocket();
-  const [data, setData] = useState<{
-    user: User | Player | null;
-    isConnected: boolean;
-    lobby: Lobby | null;
-  }>({ user: null, isConnected: false, lobby: null });
-  const { user, isConnected, lobby } = data;
-
+  const [isConnected, setIsConnected] = useState(false);
   const signIn = (name: string) => {
     socket?.emit("add_user", name);
   };
@@ -64,17 +57,17 @@ export const MainController = () => {
   const signOut = () => {
     user && socket?.emit("remove_user", user.id);
     sessionStorage.removeItem("userId");
-    setData({ ...data, user: null });
+    setUserData(null);
   };
   const handleSocketInitialization = useCallback(async () => {
     let socket = await socketInitializer();
     if (socket) {
-      setData({ ...data, isConnected: true });
+      setIsConnected(true);
     }
-  }, [socketInitializer, data]);
+  }, [socketInitializer]);
   useEffect(() => {
     if (socket) {
-      handleSocketEvents(socket, setData, data);
+      handleSocketEvents(socket);
       let userId = sessionStorage.getItem("userId");
       if (!user && userId) {
         socket.emit("reconnect_user", userId);
@@ -85,106 +78,109 @@ export const MainController = () => {
     return () => {
       socket && tearDownSocketEvents(socket);
     };
-  }, [socket, handleSocketInitialization, user, data]);
+  }, [socket, handleSocketInitialization, user]);
 
   return (
     <div className={styles.mainControllerContainer}>
-      <UserContext.Provider value={{ user }}>
-        {user && socket && !lobby ? (
-          !lobby && (
-            <>
-              <DashBoard signOut={signOut} updatePlayer={updatePlayer} />
-              <LobbyList socket={socket} />
-            </>
-          )
-        ) : user && lobby ? (
-          (!lobby.game && (
-            <div style={{ display: "flex", width: "100%", maxHeight: "20rem" }}>
-              <LobbyView
-                userId={user.id}
-                lobby={lobby}
-                onConfigChange={updateConfig}
-                leaveLobby={leaveLobby}
-                socketId={socket && socket.id}
-                updatePlayer={updatePlayer}
-                startGame={startGame}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "100%",
-                }}
-              >
-                <ChatBox messages={lobby.chat} />
-                <ChatInput onSendMessage={sendMessage} />
-              </div>
+      {user && socket && !lobby ? (
+        !lobby && (
+          <>
+            <DashBoard signOut={signOut} updatePlayer={updatePlayer} />
+            <LobbyList socket={socket} />
+          </>
+        )
+      ) : user && lobby ? (
+        (!lobby.game && (
+          <div style={{ display: "flex", width: "100%", maxHeight: "20rem" }}>
+            <LobbyView
+              userId={user.id}
+              lobby={lobby}
+              onConfigChange={updateConfig}
+              leaveLobby={leaveLobby}
+              socketId={socket && socket.id}
+              updatePlayer={updatePlayer}
+              startGame={startGame}
+            />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+              }}
+            >
+              <ChatBox messages={lobby.chat} />
+              <ChatInput onSendMessage={sendMessage} />
             </div>
-          )) ||
-          (lobby.game && (
-            <>
-              <div
-                style={{ display: "flex", width: "100%", maxHeight: "20rem" }}
-              >
-                {(lobby.game.isConcluded && (
-                  <>
-                    <Confetti height={1000} width={3000} tweenDuration={5000} />
-                    <div className={styles.conclusionBox}>
-                      <span style={{ textAlign: "center", fontSize: "2rem" }}>
-                        GAME OVER!
-                      </span>
-                      <Scores
-                        style={{ bottom: "-20vh" }}
-                        players={lobby.users}
-                        mode={lobby.config.mode}
-                      />
-                      <button
-                        onClick={() => {
-                          setData({ ...data, lobby: null });
-                        }}
-                      >
-                        Leave
-                      </button>{" "}
-                    </div>
-                  </>
-                )) || (
-                  <>
-                    <GameView
-                      game={lobby.game}
-                      config={lobby.config}
-                      submitAnswer={submitAnswer}
-                      onChange={updateConfig}
-                      isOwner={user.id === lobby.hostId}
-                      nextTrivia={nextTrivia}
-                      endGame={endGame}
+          </div>
+        )) ||
+        (lobby.game && (
+          <>
+            <div style={{ display: "flex", width: "100%", maxHeight: "20rem" }}>
+              {(lobby.game.isConcluded && (
+                <>
+                  <Confetti height={1000} width={3000} tweenDuration={5000} />
+                  <div className={styles.conclusionBox}>
+                    <span style={{ textAlign: "center", fontSize: "2rem" }}>
+                      GAME OVER!
+                    </span>
+                    <Scores
+                      style={{ bottom: "-20vh" }}
+                      players={lobby.users}
+                      mode={lobby.config.mode}
                     />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        height: "100%",
+                    <button
+                      onClick={() => {
+                        store.dispatch(setLobbyData(null));
+                        store.dispatch(setUserData(null));
                       }}
                     >
-                      <div className="chat-box" style={{ height: "100%" }}>
-                        <ChatBox messages={lobby.chat} />
-                        <ChatInput onSendMessage={sendMessage} />
-                      </div>
+                      Leave
+                    </button>{" "}
+                  </div>
+                </>
+              )) || (
+                <>
+                  <GameView
+                    game={lobby.game}
+                    config={lobby.config}
+                    submitAnswer={submitAnswer}
+                    onChange={updateConfig}
+                    isOwner={user.id === lobby.hostId}
+                    nextTrivia={nextTrivia}
+                    endGame={endGame}
+                  />
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100%",
+                    }}
+                  >
+                    <div className="chat-box" style={{ height: "100%" }}>
+                      <ChatBox messages={lobby.chat} />
+                      <ChatInput onSendMessage={sendMessage} />
                     </div>
-                  </>
-                )}
-              </div>
-
-              {!lobby.game.isConcluded && (
-                <Scores players={lobby.users} mode={lobby.config.mode} />
+                  </div>
+                </>
               )}
-            </>
-          ))
-        ) : isConnected && !user ? (
-          <SignInView socket={socket} handleSubmit={signIn} />
-        ) : (
-          <p>Please wait...</p>
-        )}
-      </UserContext.Provider>
+            </div>
+
+            {!lobby.game.isConcluded && (
+              <Scores players={lobby.users} mode={lobby.config.mode} />
+            )}
+          </>
+        ))
+      ) : isConnected && !user ? (
+        <SignInView socket={socket} handleSubmit={signIn} />
+      ) : (
+        <p>Please wait...</p>
+      )}
     </div>
   );
 };
+const mapStateToProps = (state: any) => ({
+  user: state.user.userData,
+  lobby: state.lobby.lobbyData,
+});
+
+export default connect(mapStateToProps)(MainController);

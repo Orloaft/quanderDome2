@@ -2,8 +2,8 @@ import { Player } from "@/gameLogic";
 import Image from "next/image";
 import styles from "./styles.module.scss";
 import ReadyBox from "./ReadyBox";
-import { useUserContext } from "@/hooks/useUserContext";
 import { TeamSelect } from "./TeamSelect";
+import { useSelector } from "react-redux";
 export const PlayerCard = ({
   player,
   updatePlayer,
@@ -13,7 +13,7 @@ export const PlayerCard = ({
   updatePlayer: (e: any) => void;
   teams: boolean;
 }) => {
-  const user = useUserContext().user;
+  const user = useSelector((state: any) => state.user.userData);
 
   return (
     <div className="frame">

@@ -8,6 +8,7 @@ import {
   emitClickEvent,
   handleThrottledClick,
 } from "@/utils/handleThrottledClick";
+import { useSelector } from "react-redux";
 interface TriviaBoxProps {
   question: TriviaQuestion;
   submitAnswer: any;
@@ -19,7 +20,7 @@ const TriviaBox: React.FC<TriviaBoxProps> = ({
   submitAnswer,
   style,
 }) => {
-  const user = useUserContext().user as Player;
+  const user = useSelector((state: any) => state.user.userData);
   return (
     <div className={styles["trivia-box"]} style={style}>
       <div className="frame">{question.question}</div>

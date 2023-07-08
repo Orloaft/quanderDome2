@@ -7,23 +7,23 @@ const SET_USER_DATA = "SET_USER_DATA";
 
 export interface SetLobbyDataAction {
   type: typeof SET_LOBBY_DATA;
-  payload: Lobby;
+  payload: Lobby | null;
 }
 
 export interface SetUserDataAction {
   type: typeof SET_USER_DATA;
-  payload: User;
+  payload: User | Player | null;
 }
 export type ActionTypes = SetLobbyDataAction | SetUserDataAction;
 
-function setLobbyData(data: Lobby): SetLobbyDataAction {
+export function setLobbyData(data: Lobby | null): SetLobbyDataAction {
   return {
     type: SET_LOBBY_DATA,
     payload: data,
   };
 }
 
-function setUserData(data: User | Player): SetUserDataAction {
+export function setUserData(data: User | Player | null): SetUserDataAction {
   return {
     type: SET_USER_DATA,
     payload: data,

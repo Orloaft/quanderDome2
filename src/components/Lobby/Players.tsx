@@ -3,6 +3,7 @@ import { memo } from "react";
 import { useUserContext } from "@/hooks/useUserContext";
 import { PlayerCard } from "./PlayerCard";
 import styles from "./styles.module.scss";
+import { useSelector } from "react-redux";
 export const Players = memo(function Players({
   players,
   updatePlayer,
@@ -16,7 +17,7 @@ export const Players = memo(function Players({
   updatePlayer: (e: any) => void;
   leaveLobby: (userId: string, socketId: string) => void;
 }) {
-  let user = useUserContext().user as Player;
+  const user = useSelector((state: any) => state.user.userData);
   return (
     <div className={styles.players}>
       {players.map((u: Player) => {

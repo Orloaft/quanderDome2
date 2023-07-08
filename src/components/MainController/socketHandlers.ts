@@ -1,6 +1,8 @@
+import { setLobbyData, setUserData } from "@/actions";
 import { Player } from "@/gameLogic";
 import { Lobby } from "@/gameLogic/lobby";
 import { User } from "@/gameLogic/users";
+import { store } from "@/store";
 import { Socket } from "socket.io-client";
 export const tearDownSocketEvents = (socket: Socket) => {
   socket.off("add_user_res");
@@ -8,40 +10,35 @@ export const tearDownSocketEvents = (socket: Socket) => {
   socket.off("enter_lobby_res");
   socket.off("update_lobby_res");
 };
-const handleSocketEvents = (
-  socket: Socket,
-  setData: React.Dispatch<React.SetStateAction<any>>,
-  data: any
-): void => {
+const handleSocketEvents = (socket: Socket): void => {
   socket.on("add_user_res", (user: User | Player) => {
     sessionStorage.setItem("userId", user.id);
-    setData({ ...data, user: user });
+    store.dispatch(setUserData(user));
+    console.log(store.getState().user);
   });
   socket.on("update_lobby_res", (lobby) => {
-    console.log(lobby);
     if (lobby.isConcluded) {
       sessionStorage.removeItem("lobbyId");
     }
-    const user = lobby.users.find(
+    const user: User | Player = lobby.users.find(
       (u: User | Player) => u.id === sessionStorage.getItem("userId")
     );
     if (user) {
-      setData({ ...data, lobby: lobby, user: user });
-    } else {
-      setData({ ...data, lobby: lobby });
+      store.dispatch(setUserData(user));
     }
+    store.dispatch(setLobbyData(lobby));
   });
   socket.on("leave_lobby_res", () => {
     sessionStorage.removeItem("lobbyId");
-    setData({ ...data, lobby: null });
+    store.dispatch(setLobbyData(null));
   });
   socket.on("enter_lobby_res", (lobby: Lobby) => {
     if (lobby) {
       sessionStorage.setItem("lobbyId", lobby.id);
-      setData({ ...data, lobby: lobby });
+      store.dispatch(setLobbyData(lobby));
     } else {
       sessionStorage.removeItem("lobbyId");
-      setData({ ...data, lobby: lobby });
+      store.dispatch(setLobbyData(lobby));
     }
   });
 };
