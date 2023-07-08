@@ -1,12 +1,26 @@
 .trivia-box {
     max-width: 90vw;
+    display: flex;
     align-self: center;
+    flex-direction: column;
+    gap: 1rem;
+    @media (max-width: 768px) {
+        font-size: 1.25rem;
+    }
 }
 .optionContainer {
     display: flex;
     flex-wrap: wrap;
+    div {
+        width: 50%;
+    }
     @media (max-width: 768px) {
-        flex-direction: row !important;
+        gap: 1rem;
+        flex-direction: column;
+        width: 100%;
+        div {
+            width: 100%;
+        }
     }
 }
 

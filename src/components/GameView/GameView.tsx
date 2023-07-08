@@ -60,15 +60,16 @@ export const GameView = ({
           question={game.currentQuestion}
           submitAnswer={submitAnswer}
         />
-      )) || (
-        <MarathonConfig
-          nextTrivia={nextTrivia}
-          endGame={endGame}
-          isOwner={isOwner}
-          config={config}
-          onChange={onChange}
-        />
-      )}
+      )) ||
+        (!game.isConcluded && (
+          <MarathonConfig
+            nextTrivia={nextTrivia}
+            endGame={endGame}
+            isOwner={isOwner}
+            config={config}
+            onChange={onChange}
+          />
+        ))}
       <div
         className="frame"
         style={{ width: "fit-content", fontSize: "1.25rem" }}
@@ -76,8 +77,7 @@ export const GameView = ({
         {" "}
         <ChatBox socket={socket} />
       </div>
-
-      <Scores />
+      {!game.isConcluded && <Scores />}
     </div>
   );
 };

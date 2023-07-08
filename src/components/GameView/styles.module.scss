@@ -11,12 +11,11 @@
     display: flex;
     gap: 1rem;
     width: 100%;
-    flex-direction: column;
-
+    @media (max-width: 768px) {
+        transform: scale(0.55);
+    }
     @media (max-width: 1075px) {
         flex-direction: row !important;
-
-        transform: scale(0.55);
     }
 }
 .countDown {
