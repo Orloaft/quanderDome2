@@ -18,6 +18,7 @@ export const GameView = ({
   endGame,
   nextTrivia,
   socket,
+  leaveLobby,
 }: {
   game: GameData;
   config: GameConfig;
@@ -27,6 +28,7 @@ export const GameView = ({
   endGame: any;
   nextTrivia: any;
   socket: any;
+  leaveLobby: (userId: string) => void;
 }) => {
   return (
     <div className={styles.gameContainer}>
@@ -39,6 +41,7 @@ export const GameView = ({
             <Scores style={{ bottom: "-20vh" }} />
             <button
               onClick={() => {
+                leaveLobby("self");
                 store.dispatch(setLobbyData(null));
                 store.dispatch(setUserData(null));
               }}
@@ -47,28 +50,34 @@ export const GameView = ({
             </button>{" "}
           </div>
         </>
-      )) ||
-        (game.countDown > 0 && (
-          <div className={styles.countDown}>
-            <span className={styles.number}>{game.countDown}</span>
-          </div>
-        )) ||
-        (game.currentQuestion.question && (
-          <TriviaBox
-            style={{ width: "30rem", opacity: `${game.countDown ? `0` : `1`}` }}
-            question={game.currentQuestion}
-            submitAnswer={submitAnswer}
-          />
-        )) ||
-        (!game.isConcluded && (
-          <MarathonConfig
-            nextTrivia={nextTrivia}
-            endGame={endGame}
-            isOwner={isOwner}
-            config={config}
-            onChange={onChange}
-          />
-        ))}
+      )) || (
+        <>
+          {game.countDown > 0 && (
+            <div className={styles.countDown}>
+              <span className={styles.number}>{game.countDown}</span>
+            </div>
+          )}{" "}
+          {(game.currentQuestion.question && (
+            <TriviaBox
+              style={{
+                width: "30rem",
+                opacity: `${game.countDown ? `0` : `1`}`,
+              }}
+              question={game.currentQuestion}
+              submitAnswer={submitAnswer}
+            />
+          )) ||
+            (!game.isConcluded && (
+              <MarathonConfig
+                nextTrivia={nextTrivia}
+                endGame={endGame}
+                isOwner={isOwner}
+                config={config}
+                onChange={onChange}
+              />
+            ))}
+        </>
+      )}
       <div
         className="frame"
         style={{ width: "fit-content", fontSize: "1.25rem" }}

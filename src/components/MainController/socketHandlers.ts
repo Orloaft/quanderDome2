@@ -28,6 +28,7 @@ const handleSocketEvents = (socket: Socket): void => {
     store.dispatch(setLobbyData(lobby));
   });
   socket.on("leave_lobby_res", () => {
+    console.log("keaving lobby");
     sessionStorage.removeItem("lobbyId");
     store.dispatch(setLobbyData(null));
   });

@@ -17,8 +17,9 @@ const MainController = ({ lobby, user }: { lobby: any; user: any }) => {
   const signIn = (name: string) => {
     socket?.emit("add_user", name);
   };
-  const leaveLobby = (id: string, socketId: string) =>
-    user && socket?.emit("leave_lobby", id, socketId);
+  const leaveLobby = (id: string) =>
+    user &&
+    socket?.emit("leave_lobby", id === "self" ? user.id : id, socket.id);
 
   const updateConfig = (config: GameConfig) => {
     lobby && socket?.emit("update_config", lobby.id, config);
@@ -88,6 +89,7 @@ const MainController = ({ lobby, user }: { lobby: any; user: any }) => {
             nextTrivia={nextTrivia}
             endGame={endGame}
             socket={socket}
+            leaveLobby={leaveLobby}
           />
         </>
       );
@@ -111,7 +113,7 @@ const MainController = ({ lobby, user }: { lobby: any; user: any }) => {
         <LobbyList socket={socket} />
       </div>
     );
-  } else if (socket) {
+  } else if (isConnected) {
     return <SignInView socket={socket} handleSubmit={signIn} />;
   } else {
     return <span>Connecting...</span>;

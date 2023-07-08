@@ -25,11 +25,6 @@ export const LobbyView = ({
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div className={`frame ${styles.lobbyViewContainer}`}>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <p style={{ fontSize: "3rem" }}>
-            <b>{lobby.name}</b>
-          </p>
-        </div>
         <div className={styles.configView}>
           <ConfigView
             config={lobby.config}
@@ -37,10 +32,7 @@ export const LobbyView = ({
             isHost={userId === lobby.hostId}
           />
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <button
-              className={styles.leaveButton}
-              onClick={() => leaveLobby(userId, socket.id)}
-            >
+            <button className={styles.leaveButton} onClick={() => leaveLobby()}>
               Leave lobby
             </button>
             {userId === lobby.hostId && (

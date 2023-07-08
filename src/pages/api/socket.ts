@@ -138,9 +138,11 @@ const SocketHandler = (req: any, res: any) => {
         io.to(socket.id).emit("get_lobbies_res", publicLobbies);
       });
       socket.on("leave_lobby", (userId: string, socketId: string) => {
+        //TODO FIX THIS. OLDLOBBY is undefined. oh its because iam currently passing lobby id instead user by mistake.
         const oldLobby = removeUserFromLobby(userId);
         const userSocket = io.sockets.sockets.get(socketId);
         if (oldLobby && userSocket) {
+          console.log("leaving lobbo");
           userSocket.leave(oldLobby.id);
           io.to(oldLobby.id).emit("update_lobby_res", oldLobby);
           io.to(socketId).emit("leave_lobby_res");
