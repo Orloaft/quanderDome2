@@ -5,7 +5,11 @@
     justify-content: center;
     color: #fff;
     font-size: 14px;
-
+    position: absolute;
+    bottom: 50vh;
+    @media (max-height: 450px) {
+        bottom: 35vh;
+    }
     form {
         display: flex;
         flex-direction: column;

@@ -1,6 +1,6 @@
 import { GameConfig } from "@/gameLogic/lobby";
 import { CategorySelect } from "./CategorySelect";
-
+import styles from "./styles.module.scss";
 export const MarathonConfig = ({
   config,
   onChange,
@@ -26,18 +26,23 @@ export const MarathonConfig = ({
     onChange(newConfig);
   };
   return (
-    <div className="frame">
+    <div
+      className={`frame ${styles.marathon}`}
+      style={{ width: "fit-content" }}
+    >
       {(isOwner && (
         <>
-          <label>
-            Questions:
-            <input
-              type="number"
-              name="questions"
-              defaultValue={config.questions}
-              max={30}
-              onChange={handleInputChange}
-            />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <label>
+              Questions:
+              <input
+                type="number"
+                name="questions"
+                defaultValue={config.questions}
+                max={30}
+                onChange={handleInputChange}
+              />
+            </label>
             <label>
               Category
               <CategorySelect
@@ -47,7 +52,7 @@ export const MarathonConfig = ({
             </label>
             <button onClick={nextTrivia}>Continue</button>
             <button onClick={endGame}>End game</button>
-          </label>
+          </div>
         </>
       )) || (
         <>

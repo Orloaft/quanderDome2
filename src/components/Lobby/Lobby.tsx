@@ -3,13 +3,14 @@ import { ConfigView } from "../Config/ConfigView";
 import TriviaBox from "../Trivia/TriviaView";
 import { Players } from "./Players";
 import styles from "./styles.module.scss";
+import ChatBox from "../Chat/Chat";
 
 export const LobbyView = ({
   lobby,
   onConfigChange,
   userId,
   leaveLobby,
-  socketId,
+  socket,
   updatePlayer,
   startGame,
 }: {
@@ -18,7 +19,7 @@ export const LobbyView = ({
   onConfigChange: any;
   userId: string;
   leaveLobby: any;
-  socketId: string | null;
+  socket: any;
   startGame: () => void;
 }) => {
   return (
@@ -35,34 +36,36 @@ export const LobbyView = ({
             onChange={onConfigChange}
             isHost={userId === lobby.hostId}
           />
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <button
-            className={styles.leaveButton}
-            onClick={() => leaveLobby(userId, socketId)}
-          >
-            Leave lobby
-          </button>
-          {userId === lobby.hostId && (
+          <div style={{ display: "flex", flexDirection: "column" }}>
             <button
-              className={styles.startButton}
-              style={{
-                backgroundColor:
+              className={styles.leaveButton}
+              onClick={() => leaveLobby(userId, socket.id)}
+            >
+              Leave lobby
+            </button>
+            {userId === lobby.hostId && (
+              <button
+                className={styles.startButton}
+                style={{
+                  backgroundColor:
+                    lobby.users.find((user) => user.isReady === false) !==
+                    undefined
+                      ? "black"
+                      : "",
+                }}
+                onClick={startGame}
+                disabled={
                   lobby.users.find((user) => user.isReady === false) !==
                   undefined
-                    ? "black"
-                    : "",
-              }}
-              onClick={startGame}
-              disabled={
-                lobby.users.find((user) => user.isReady === false) !== undefined
-              }
-            >
-              Start
-            </button>
-          )}
+                }
+              >
+                Start
+              </button>
+            )}
+          </div>
         </div>
+
+        <ChatBox socket={socket} />
       </div>
       <div className={styles.playerscontainer}>
         <Players

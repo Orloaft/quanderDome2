@@ -1,19 +1,27 @@
+.gameContainer {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+}
+
 .scores {
-    position: absolute;
     display: flex;
     gap: 1rem;
-
+    width: 100%;
     flex-direction: column;
-    left: 0;
-    @media (max-width: 768px) {
+
+    @media (max-width: 1075px) {
         flex-direction: row !important;
-        right: 0;
-        bottom: 0%;
+
+        transform: scale(0.55);
     }
 }
 .countDown {
     position: absolute;
-    left: 10%;
+    left: 0%;
     top: 25%;
     width: 100%;
     height: 100%;

@@ -65,3 +65,10 @@ button:hover {
   background-color: #fbeaeb;
   color: #5b0e2d;
 }
+input,select{
+background: black;
+color: white;
+border-radius: .25rem;
+border:none;
+padding: .5rem;
+}

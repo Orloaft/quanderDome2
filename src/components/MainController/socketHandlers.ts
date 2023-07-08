@@ -14,7 +14,6 @@ const handleSocketEvents = (socket: Socket): void => {
   socket.on("add_user_res", (user: User | Player) => {
     sessionStorage.setItem("userId", user.id);
     store.dispatch(setUserData(user));
-    console.log(store.getState().user);
   });
   socket.on("update_lobby_res", (lobby) => {
     if (lobby.isConcluded) {

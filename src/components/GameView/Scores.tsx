@@ -2,31 +2,31 @@ import { Player } from "@/gameLogic";
 import Image from "next/image";
 import styles from "./styles.module.scss";
 import { GameMode } from "@/gameLogic/lobby";
-export const Scores = ({
-  players,
-  mode,
-  style,
-}: {
-  players: Player[];
-  mode: GameMode;
-  style?: any;
-}) => {
+import { useSelector } from "react-redux";
+import { LobbyState } from "@/actions/types";
+export const Scores = ({ style }: { style?: any }) => {
+  const lobby = useSelector((state: any) => state.lobby.lobbyData);
+
   return (
     <div className={styles.scores} style={style}>
-      {players
-        .sort((a, b) => {
+      {lobby.users
+        .sort((a: Player, b: Player) => {
           if (a.points < b.points) {
             return 1;
           } else {
             return -1;
           }
         })
-        .map((player) => {
+        .map((player: Player) => {
           return (
             <div
               key={player.id}
               className="frame"
-              style={{ display: "flex", flexDirection: "column" }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "fit-content",
+              }}
             >
               {" "}
               <div
@@ -47,7 +47,7 @@ export const Scores = ({
               </div>
               <span>{player.name}</span>
               <span>
-                {(mode === GameMode.DEATH_MATCH && player.life) ||
+                {(lobby.config.mode === GameMode.DEATH_MATCH && player.life) ||
                   player.points}
               </span>
             </div>

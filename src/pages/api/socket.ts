@@ -53,7 +53,6 @@ const SocketHandler = (req: any, res: any) => {
       });
       socket.on("send_message", (lobbyId, username, message) => {
         let lobby = sendLobbyMessage(lobbyId, username, message);
-
         if (lobby) {
           io.to(lobby.id).emit("update_lobby_res", lobby);
         }
