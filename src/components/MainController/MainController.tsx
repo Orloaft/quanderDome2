@@ -10,6 +10,7 @@ import { GameView } from "../GameView/GameView";
 import { connect } from "react-redux";
 import { setUserData } from "@/actions";
 import styles from "./styles.module.scss";
+import Confetti from "react-confetti";
 const MainController = ({ lobby, user }: { lobby: any; user: any }) => {
   const [socket, socketInitializer] = useSocket();
   const [isConnected, setIsConnected] = useState(false);
@@ -74,16 +75,21 @@ const MainController = ({ lobby, user }: { lobby: any; user: any }) => {
   if (lobby) {
     if (lobby.game) {
       return (
-        <GameView
-          game={lobby.game}
-          config={lobby.config}
-          submitAnswer={submitAnswer}
-          onChange={updateConfig}
-          isOwner={user.id === lobby.hostId}
-          nextTrivia={nextTrivia}
-          endGame={endGame}
-          socket={socket}
-        />
+        <>
+          {lobby.game.isConcluded && (
+            <Confetti height={1000} width={3000} tweenDuration={5000} />
+          )}
+          <GameView
+            game={lobby.game}
+            config={lobby.config}
+            submitAnswer={submitAnswer}
+            onChange={updateConfig}
+            isOwner={user.id === lobby.hostId}
+            nextTrivia={nextTrivia}
+            endGame={endGame}
+            socket={socket}
+          />
+        </>
       );
     } else {
       return (

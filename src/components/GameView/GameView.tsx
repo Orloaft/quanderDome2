@@ -3,7 +3,7 @@ import TriviaBox from "../Trivia/TriviaView";
 import styles from "./styles.module.scss";
 import { MarathonConfig } from "../Config/MarathonConfig";
 import { GameConfig } from "@/gameLogic/lobby";
-import Confetti from "react-confetti";
+
 import { Scores } from "./Scores";
 import { setLobbyData, setUserData } from "@/actions";
 import { store } from "@/store";
@@ -32,7 +32,6 @@ export const GameView = ({
     <div className={styles.gameContainer}>
       {(game.isConcluded && (
         <>
-          <Confetti height={1000} width={3000} tweenDuration={5000} />
           <div className={styles.conclusionBox}>
             <span style={{ textAlign: "center", fontSize: "2rem" }}>
               GAME OVER!
@@ -53,7 +52,7 @@ export const GameView = ({
           <div className={styles.countDown}>
             <span className={styles.number}>{game.countDown}</span>
           </div>
-        ),
+        )) ||
         (game.currentQuestion.question && (
           <TriviaBox
             style={{ width: "30rem", opacity: `${game.countDown ? `0` : `1`}` }}
@@ -61,15 +60,15 @@ export const GameView = ({
             submitAnswer={submitAnswer}
           />
         )) ||
-          (!game.isConcluded && (
-            <MarathonConfig
-              nextTrivia={nextTrivia}
-              endGame={endGame}
-              isOwner={isOwner}
-              config={config}
-              onChange={onChange}
-            />
-          )))}
+        (!game.isConcluded && (
+          <MarathonConfig
+            nextTrivia={nextTrivia}
+            endGame={endGame}
+            isOwner={isOwner}
+            config={config}
+            onChange={onChange}
+          />
+        ))}
       <div
         className="frame"
         style={{ width: "fit-content", fontSize: "1.25rem" }}
