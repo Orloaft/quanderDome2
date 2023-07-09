@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import { GameMode } from "@/gameLogic/lobby";
 import { useSelector } from "react-redux";
 import { LobbyState } from "@/actions/types";
+import { PlayerScore } from "./PlayerScore";
 export const Scores = ({ style }: { style?: any }) => {
   const lobby = useSelector((state: any) => state.lobby.lobbyData);
 
@@ -19,38 +20,11 @@ export const Scores = ({ style }: { style?: any }) => {
         })
         .map((player: Player) => {
           return (
-            <div
+            <PlayerScore
               key={player.id}
-              className="frame"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "fit-content",
-              }}
-            >
-              {" "}
-              <div
-                style={{
-                  border: `4px solid ${player.color}`,
-                  padding: 0,
-                  borderRadius: "4px",
-                  width: "fit-content",
-                  opacity: `${player.socketId ? `1` : `.4`}`,
-                }}
-              >
-                <Image
-                  width={60}
-                  height={60}
-                  src={player.avatar}
-                  alt="Selected Image"
-                />
-              </div>
-              <span>{player.name}</span>
-              <span>
-                {(lobby.config.mode === GameMode.DEATH_MATCH && player.life) ||
-                  player.points}
-              </span>
-            </div>
+              player={player}
+              mode={lobby.config.mode}
+            />
           );
         })}
     </div>
