@@ -91,6 +91,41 @@ const PlayerView = memo(function PlayerView({
         />
       ),
     },
+
+    {
+      value: "/avatars/avatar8.jpg",
+      label: (
+        <Image
+          width={100}
+          height={100}
+          src="/avatars/avatar8.jpg"
+          alt="Selected Image"
+        />
+      ),
+    },
+
+    {
+      value: "/avatars/avatar9.jpg",
+      label: (
+        <Image
+          width={100}
+          height={100}
+          src="/avatars/avatar9.jpg"
+          alt="Selected Image"
+        />
+      ),
+    },
+    {
+      value: "/avatars/avatar10.jpg",
+      label: (
+        <Image
+          width={100}
+          height={100}
+          src="/avatars/avatar10.jpg"
+          alt="Selected Image"
+        />
+      ),
+    },
   ];
   const colorOptions = [
     {
