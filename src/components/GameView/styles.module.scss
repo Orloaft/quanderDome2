@@ -53,14 +53,4 @@
     top: 25%;
     left: 25%;
     opacity: 1;
-    animation: fade-out 2s ease-in-out once;
-}
-@keyframes fade-out {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
 }
